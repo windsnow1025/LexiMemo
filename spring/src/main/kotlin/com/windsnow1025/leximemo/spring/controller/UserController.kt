@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class UserController(val service: UserService) {
     @GetMapping("/user")
-    fun signIn(@RequestParam username: String, @RequestParam password: String): ResponseEntity<Void> {
-        return if (service.signIn(username, password))
-            ResponseEntity.ok().build()
+    fun signIn(@RequestParam username: String, @RequestParam password: String): ResponseEntity<Map<String, String>> {
+        val token: String? = service.signIn(username, password)
+        return if (token != null)
+            ResponseEntity.ok(mapOf("token" to token))
         else
             ResponseEntity.badRequest().build()
     }
