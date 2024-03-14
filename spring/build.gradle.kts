@@ -24,8 +24,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
-	implementation("mysql:mysql-connector-java:5.1.6")
+	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+	implementation("com.mysql:mysql-connector-j:8.3.0")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
