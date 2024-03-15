@@ -1,6 +1,6 @@
 package com.windsnow1025.leximemo.spring.controller
 
-import com.windsnow1025.leximemo.spring.model.User
+import com.windsnow1025.leximemo.spring.entity.User
 import com.windsnow1025.leximemo.spring.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

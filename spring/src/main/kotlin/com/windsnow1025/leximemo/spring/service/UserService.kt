@@ -2,7 +2,7 @@ package com.windsnow1025.leximemo.spring.service
 
 import com.windsnow1025.leximemo.spring.logic.createTokenFromUsername
 import com.windsnow1025.leximemo.spring.logic.parseUsernameFromToken
-import com.windsnow1025.leximemo.spring.model.User
+import com.windsnow1025.leximemo.spring.entity.User
 import com.windsnow1025.leximemo.spring.repository.UserRepository
 import org.springframework.stereotype.Service
 
