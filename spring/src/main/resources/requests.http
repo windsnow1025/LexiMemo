@@ -1,0 +1,16 @@
+### Get Root
+GET http://localhost:8080/
+
+### Get Sign In
+
+GET http://localhost:8080/user?username=test&password=test
+
+### Post Sign Up
+
+POST http://localhost:8080/user
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}
