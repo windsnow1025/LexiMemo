@@ -1,17 +1,15 @@
 package com.windsnow1025.leximemo.spring.controller
 
+import com.windsnow1025.leximemo.spring.model.User
 import com.windsnow1025.leximemo.spring.service.UserService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class UserController(val service: UserService) {
     @GetMapping("/user")
     fun signIn(@RequestParam username: String, @RequestParam password: String): ResponseEntity<Map<String, String>> {
-        val token: String? = service.signIn(username, password)
+        val token: String? = service.signIn(User(null, username, password))
         return if (token != null)
             ResponseEntity.ok(mapOf("token" to token))
         else
@@ -19,8 +17,8 @@ class UserController(val service: UserService) {
     }
 
     @PostMapping("/user")
-    fun signUp(@RequestParam username: String, @RequestParam password: String): ResponseEntity<Void> {
-        return if (service.signUp(username, password))
+    fun signUp(@RequestBody user: User): ResponseEntity<Void> {
+        return if (service.signUp(user))
             ResponseEntity.ok().build()
         else
             ResponseEntity.badRequest().build()
