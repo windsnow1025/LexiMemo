@@ -1,3 +1,7 @@
 package com.windsnow1025.leximemo.spring.model
 
-data class User(val id: Int?, val username: String, val password: String)
+import org.springframework.data.annotation.Id
+import org.springframework.data.relational.core.mapping.Table
+
+@Table("USERS")
+data class User(@Id var id: Int?, val username: String, val password: String)

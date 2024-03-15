@@ -24,6 +24,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	// https://mvnrepository.com/artifact/org.springframework.data/spring-data-relational
+	implementation("org.springframework.data:spring-data-relational:3.2.3")
 	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
 	implementation("com.mysql:mysql-connector-j:8.3.0")
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl

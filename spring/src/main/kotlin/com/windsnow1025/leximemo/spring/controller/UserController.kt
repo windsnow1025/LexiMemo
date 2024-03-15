@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*
 class UserController(val service: UserService) {
     @GetMapping("/user")
     fun getUser(@RequestHeader("Authorization") token: String): ResponseEntity<User> {
-        val user: User = service.getUser(token)
+        val user = service.getUser(token)
         return ResponseEntity.ok(user)
     }
 
     @PostMapping("/user/sign-in")
     fun signIn(@RequestBody user: User): ResponseEntity<Map<String, String>> {
-        val token: String? = service.signIn(user)
+        val token = service.signIn(user)
         return if (token != null)
             ResponseEntity.ok(mapOf("token" to token))
         else
@@ -24,9 +24,11 @@ class UserController(val service: UserService) {
 
     @PostMapping("/user/sign-up")
     fun signUp(@RequestBody user: User): ResponseEntity<Void> {
-        return if (service.signUp(user))
-            ResponseEntity.ok().build()
-        else
-            ResponseEntity.badRequest().build()
+        try {
+            service.signUp(user)
+            return ResponseEntity.ok().build()
+        } catch (e: Exception) {
+            return ResponseEntity.badRequest().build()
+        }
     }
 }
