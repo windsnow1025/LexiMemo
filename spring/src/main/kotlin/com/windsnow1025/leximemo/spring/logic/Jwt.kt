@@ -2,9 +2,7 @@ package com.windsnow1025.leximemo.spring.logic
 
 import io.jsonwebtoken.Jwts
 
-import javax.crypto.SecretKey
-
-private val key: SecretKey = Jwts.SIG.HS256.key().build()
+private val key = Jwts.SIG.HS256.key().build()
 
 fun createTokenFromUsername(username: String): String {
     return Jwts.builder()
