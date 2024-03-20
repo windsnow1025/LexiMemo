@@ -4,4 +4,4 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 
 @Table("users")
-data class User(@Id var id: Int?, val username: String?, val password: String)
+data class User(@Id var id: Int?, val username: String?, val password: String, var userType: String = "normal")

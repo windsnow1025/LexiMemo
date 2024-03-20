@@ -15,4 +15,7 @@ interface UserRepository : CrudRepository<User, Int> {
     @Transactional
     @Query("UPDATE users SET password = :password WHERE username = :username")
     fun updatePasswordByUsername(@Param("password") password: String?, @Param("username") username: String?): Boolean
+
+
 }
+

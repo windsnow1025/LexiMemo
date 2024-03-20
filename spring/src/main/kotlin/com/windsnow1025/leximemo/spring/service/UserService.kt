@@ -21,9 +21,10 @@ class UserService(val db: UserRepository) {
         return null
     }
 
-    fun signUp(user: User): User {
+    fun signUp(user: User, userType: String = "normal"): User {
         return db.save(user)
     }
+
 
     fun updatePasswordByToken(token: String, password: String): Boolean {
         val username = parseUsernameFromToken(token)
