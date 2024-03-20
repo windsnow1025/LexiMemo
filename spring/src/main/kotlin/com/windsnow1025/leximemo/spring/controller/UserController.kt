@@ -31,4 +31,15 @@ class UserController(val service: UserService) {
             return ResponseEntity.badRequest().build()
         }
     }
+
+    @PostMapping("/user/password")
+    fun updatePassword(@RequestHeader("Authorization") token: String, @RequestBody user: User): ResponseEntity<Void> {
+        try {
+            service.updatePassword(token, user.password)
+            return ResponseEntity.ok().build()
+        } catch (e: Exception) {
+            println(e)
+            return ResponseEntity.internalServerError().build()
+        }
+    }
 }

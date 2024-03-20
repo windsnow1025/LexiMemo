@@ -4,6 +4,7 @@ import com.windsnow1025.leximemo.spring.logic.createTokenFromUsername
 import com.windsnow1025.leximemo.spring.logic.parseUsernameFromToken
 import com.windsnow1025.leximemo.spring.entity.User
 import com.windsnow1025.leximemo.spring.repository.UserRepository
+import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,14 +15,22 @@ class UserService(val db: UserRepository) {
     }
 
     fun signIn(user: User): String? {
-        val existingUser = db.findByUsername(user.username)
+        val existingUser = db.findByUsername(user.username!!)
         if (existingUser != null && existingUser.password == user.password) {
-            return createTokenFromUsername(existingUser.username)
+            return createTokenFromUsername(existingUser.username!!)
         }
         return null
     }
 
     fun signUp(user: User) {
         db.save(user)
+    }
+
+    fun updatePassword(token: String, password: String) {
+        val username = parseUsernameFromToken(token)
+        val result = db.updatePasswordByUsername(password, username)
+        if (!result) {
+            throw Exception()
+        }
     }
 }
