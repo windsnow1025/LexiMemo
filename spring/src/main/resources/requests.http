@@ -3,7 +3,7 @@ GET http://localhost:8080/
 
 ### Get User
 GET http://localhost:8080/user
-Authorization: <token>
+Authorization: {{token}}
 
 ### Post Sign In
 
