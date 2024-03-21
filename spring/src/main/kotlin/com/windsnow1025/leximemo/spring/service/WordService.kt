@@ -11,11 +11,12 @@ import javax.naming.InsufficientResourcesException
 @Service
 class WordService(val db: WordRepository) {
     fun getWords(token: String): List<Word> {
-        val username = parseUsernameFromToken(token);
+        parseUsernameFromToken(token)
         return db.findAll().toList()
     }
+
     fun getWord(token: String, word: String): Word?{
-        val username = parseUsernameFromToken(token);
+        val username = parseUsernameFromToken(token)
         return db.findByWord(word)
     }
 

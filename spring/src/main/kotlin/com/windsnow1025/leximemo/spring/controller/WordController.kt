@@ -2,6 +2,7 @@ package com.windsnow1025.leximemo.spring.controller
 
 import com.windsnow1025.leximemo.spring.entity.Word
 import com.windsnow1025.leximemo.spring.service.WordService
+import io.jsonwebtoken.security.SignatureException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,6 +20,8 @@ class WordController(val service: WordService) {
         try {
             val words = service.getWords(token)
             return ResponseEntity.ok(words)
+        } catch (e: SignatureException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
@@ -30,6 +33,8 @@ class WordController(val service: WordService) {
         try {
             val specificWords = service.getWord(token,wordMap["word"] ?: error("Word not found"))
             return ResponseEntity.ok(specificWords)
+        } catch (e: SignatureException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
