@@ -15,19 +15,18 @@ class WordService(val db: WordRepository) {
         return db.findAll().toList()
     }
 
-    fun getWord(token: String, word: String): Word?{
+    fun getWord(token: String, word: String): Word? {
         val username = parseUsernameFromToken(token)
         return db.findByWord(word)
     }
 
     @Autowired
     lateinit var userRepository: UserRepository
-    fun addWord(token: String, word: Word): Word {
+    fun addWord(token: String, word: Word): Word? {
         val username = parseUsernameFromToken(token)
-        if (userRepository.findByUsername(username)?.userType  == "admin"){
-            return db.save(word);
-        } else {
-            throw InsufficientResourcesException("Insufficient permission to add word")
+        if (userRepository.findByUsername(username)?.userType != "admin") {
+            return null;
         }
+        return db.save(word)
     }
 }

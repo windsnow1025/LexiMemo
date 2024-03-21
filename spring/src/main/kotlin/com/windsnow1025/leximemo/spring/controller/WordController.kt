@@ -29,9 +29,12 @@ class WordController(val service: WordService) {
     }
 
     @GetMapping("/word")
-    fun getWord(@RequestHeader("Authorization") token: String,@RequestBody wordMap: Map<String, String>): ResponseEntity<Word> {
+    fun getWord(
+        @RequestHeader("Authorization") token: String,
+        @RequestBody wordMap: Map<String, String>
+    ): ResponseEntity<Word> {
         try {
-            val specificWords = service.getWord(token,wordMap["word"] ?: error("Word not found"))
+            val specificWords = service.getWord(token, wordMap["word"] ?: error("Word not found"))
             return ResponseEntity.ok(specificWords)
         } catch (e: SignatureException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
@@ -44,10 +47,11 @@ class WordController(val service: WordService) {
     @PostMapping("/word/add")
     fun addWord(@RequestHeader("Authorization") token: String, @RequestBody word: Word): ResponseEntity<Any> {
         try {
-            val result = service.addWord(token, word)
-            return ResponseEntity.ok().build()
-        } catch (e: InsufficientResourcesException) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permission to add word")
+            return if (service.addWord(token, word) != null) {
+                ResponseEntity.ok().build()
+            } else {
+                ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+            }
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
