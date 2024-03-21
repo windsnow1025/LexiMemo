@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS user_word
     weight  DOUBLE,
     day     DATE,
     PRIMARY KEY (user_id, word_id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (word_id) REFERENCES words (id)
+    FOREIGN KEY (user_id) REFERENCES user (id),
+    FOREIGN KEY (word_id) REFERENCES word (id)
 )
 
