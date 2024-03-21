@@ -15,7 +15,7 @@ class WordService(val db: WordRepository) {
         return db.findAll().toList()
     }
     fun getWord(token: String, word: String): Word?{
-        val userName = parseUsernameFromToken(token);
+        val username = parseUsernameFromToken(token);
         return db.findByWord(word)
     }
 
