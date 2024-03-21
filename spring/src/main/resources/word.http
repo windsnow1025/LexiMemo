@@ -1,47 +1,44 @@
 ### Get words
 GET http://localhost:8080/words
-Authorization: <token>
+Authorization: {{token}}
 
-###
-
-### HTTP/1.1 200 OK
-Content-Type: application/json
-
-[
-    {
-        "word_id": 1,
-        "word": "abandon",
-        "translation": "离弃;放弃;抛弃;遗弃",
-        "exampleSentence": "We had to abandon the car. By the time the rebel troops arrived, the village had already been abandoned.",
-        "frequency": 10
-    }
-]
+# HTTP/1.1 200 OK
+# Content-Type: application/json
+#
+# [
+#     {
+#         "word_id": 1,
+#         "word": "abandon",
+#         "translation": "离弃;放弃;抛弃;遗弃",
+#         "exampleSentence": "We had to abandon the car. By the time the rebel troops arrived, the village had already been abandoned.",
+#         "frequency": 10
+#     }
+# ]
 
 
 ### Get word
 GET http://localhost:8080/word
-Authorization: <token>
+Authorization: {{token}}
 
 {
     "word":"abandon"
 }
 
 ###
-
-### HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "word_id": 1,
-    "word": "abandon",
-    "translation": "离弃;放弃;抛弃;遗弃",
-    "exampleSentence": "We had to abandon the car. By the time the rebel troops arrived, the village had already been abandoned.",
-    "frequency": 10
-}
+# HTTP/1.1 200 OK
+# Content-Type: application/json
+#
+# {
+#     "word_id": 1,
+#     "word": "abandon",
+#     "translation": "离弃;放弃;抛弃;遗弃",
+#     "exampleSentence": "We had to abandon the car. By the time the rebel troops arrived, the village had already been abandoned.",
+#     "frequency": 10
+# }
 
 ### Post add (only admin)
 POST http://localhost:8080/word/add
-Authorization: <token>
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -51,14 +48,17 @@ Content-Type: application/json
   "frequency": "10"
 }
 
-### if userType == "admin"
-
-### HTTP/1.1 200 OK
-Content-Type: application/json
-
-### if userType != "admin"
+###
+# if userType == "admin"
+#
+# HTTP/1.1 200 OK
+# Content-Type: application/json
+#
+# if userType != "admin"
+#
+#
+# Content-Type: application/Text
+#
+# Insufficient permission to add word
 
 ###
-Content-Type: application/Text
-
-Insufficient permission to add word
