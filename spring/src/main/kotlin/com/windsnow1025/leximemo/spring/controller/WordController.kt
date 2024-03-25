@@ -2,6 +2,7 @@ package com.windsnow1025.leximemo.spring.controller
 
 import com.windsnow1025.leximemo.spring.entity.Word
 import com.windsnow1025.leximemo.spring.service.WordService
+import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.SignatureException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,6 +23,8 @@ class WordController(val service: WordService) {
             return ResponseEntity.ok(words)
         } catch (e: SignatureException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: MalformedJwtException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
@@ -38,6 +41,8 @@ class WordController(val service: WordService) {
             return ResponseEntity.ok(specificWords)
         } catch (e: SignatureException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: MalformedJwtException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
@@ -52,6 +57,10 @@ class WordController(val service: WordService) {
             } else {
                 ResponseEntity.status(HttpStatus.FORBIDDEN).build()
             }
+        } catch (e: SignatureException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: MalformedJwtException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()

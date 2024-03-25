@@ -25,7 +25,7 @@ class WordService(val db: WordRepository) {
     fun addWord(token: String, word: Word): Word? {
         val username = parseUsernameFromToken(token)
         if (userRepository.findByUsername(username)?.userType != "admin") {
-            return null;
+            return null
         }
         return db.save(word)
     }

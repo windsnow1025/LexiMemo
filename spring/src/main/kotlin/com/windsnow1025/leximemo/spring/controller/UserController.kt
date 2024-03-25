@@ -2,6 +2,8 @@ package com.windsnow1025.leximemo.spring.controller
 
 import com.windsnow1025.leximemo.spring.entity.User
 import com.windsnow1025.leximemo.spring.service.UserService
+import io.jsonwebtoken.MalformedJwtException
+import io.jsonwebtoken.security.SignatureException
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,6 +16,10 @@ class UserController(val service: UserService) {
         try {
             val user = service.getUser(token)
             return ResponseEntity.ok(user)
+        } catch (e: SignatureException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: MalformedJwtException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
