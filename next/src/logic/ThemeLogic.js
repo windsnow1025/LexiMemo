@@ -1,4 +1,6 @@
 import {createTheme} from "@mui/material/styles";
+import {green, red} from "@mui/material/colors"
+import NavBar from '../../app/components/common/NavBar';
 
 export function applyTheme(systemTheme) {
   localStorage.setItem("theme", systemTheme);
@@ -104,6 +106,12 @@ function applyMUITheme(theme) {
 function createMUITheme(theme) {
   return createTheme({
     palette: {
+      primary: {
+        main: '#ff80ab',
+      },
+      secondary: {
+        main: '#8c9eff',
+      },
       mode: theme,
     }
   });
