@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.SignatureException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -49,7 +50,25 @@ class WordController(val service: WordService) {
         }
     }
 
-    @PostMapping("/word/add")
+    @GetMapping("/word/{id}")
+    fun getWord(
+            @RequestHeader("Authorization") token: String,
+            @PathVariable("id") id: String
+    ): ResponseEntity<Word> {
+        try {
+            val specificWords = service.getWord(token, id)
+            return ResponseEntity.ok(specificWords)
+        } catch (e: SignatureException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: MalformedJwtException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: Exception) {
+            println(e)
+            return ResponseEntity.internalServerError().build()
+        }
+    }
+
+    @PostMapping("/word")
     fun addWord(@RequestHeader("Authorization") token: String, @RequestBody word: Word): ResponseEntity<Any> {
         try {
             return if (service.addWord(token, word) != null) {
