@@ -7,7 +7,6 @@ import com.windsnow1025.leximemo.spring.repository.WordRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
-import javax.naming.InsufficientResourcesException
 
 @Service
 class WordService(val db: WordRepository) {
@@ -17,12 +16,12 @@ class WordService(val db: WordRepository) {
     }
 
     fun getWord(token: String, word: String): Word? {
-        val username = parseUsernameFromToken(token)
+        parseUsernameFromToken(token)
         return db.findByWord(word)
     }
 
     fun getWordById(token: String, id: Int): Optional<Word> {
-        val username = parseUsernameFromToken(token)
+        parseUsernameFromToken(token)
         return db.findById(id)
     }
 
@@ -30,7 +29,7 @@ class WordService(val db: WordRepository) {
     lateinit var userRepository: UserRepository
     fun addWord(token: String, word: Word): Word? {
         val username = parseUsernameFromToken(token)
-        if (userRepository.findByUsername(username)?.userType != "admin") {
+        if (userRepository.findByUsername(username)?.type != "admin") {
             return null
         }
         return db.save(word)

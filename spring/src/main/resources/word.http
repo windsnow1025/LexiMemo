@@ -20,7 +20,6 @@ Authorization: {{token}}
 GET http://localhost:8080/word?word=abandon
 Authorization: {{token}}
 
-###
 # HTTP/1.1 200 OK
 # Content-Type: application/json
 #
@@ -32,7 +31,7 @@ Authorization: {{token}}
 #     "frequency": 10
 # }
 
-### Post add (only admin)
+### Post word (require admin)
 POST http://localhost:8080/word
 Authorization: {{token}}
 Content-Type: application/json
@@ -41,20 +40,5 @@ Content-Type: application/json
   "word": "abandon",
   "translation": "离弃;放弃;抛弃;遗弃",
   "exampleSentence": "We had to abandon the car. By the time the rebel troops arrived, the village had already been abandoned.",
-  "frequency": "10"
+  "frequency": 10
 }
-
-###
-# if userType == "admin"
-#
-# HTTP/1.1 200 OK
-# Content-Type: application/json
-#
-# if userType != "admin"
-#
-#
-# Content-Type: application/Text
-#
-# Insufficient permission to add word
-
-###

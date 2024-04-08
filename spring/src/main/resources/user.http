@@ -1,11 +1,8 @@
-### Get Root
-GET http://localhost:8080/
-
 ### Get User
 GET http://localhost:8080/user
 Authorization: {{token}}
 
-### Post Sign In
+### Post Sign In (Normal)
 
 POST http://localhost:8080/user/sign-in
 Content-Type: application/json
@@ -15,7 +12,17 @@ Content-Type: application/json
   "password": "test"
 }
 
-### Post Sign Up
+### Post Sign In (Admin)
+
+POST http://localhost:8080/user/sign-in
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+### Post Sign Up (Normal)
 
 POST http://localhost:8080/user/sign-up
 Content-Type: application/json
@@ -23,6 +30,17 @@ Content-Type: application/json
 {
   "username": "test",
   "password": "test"
+}
+
+### Post Sign Up (Admin)
+
+POST http://localhost:8080/user/sign-up
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin",
+  "type": "admin"
 }
 
 ### Post UpdatePassword

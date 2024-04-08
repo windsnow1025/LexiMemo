@@ -21,7 +21,7 @@ class UserService(val db: UserRepository) {
         return null
     }
 
-    fun signUp(user: User, userType: String = "normal"): User {
+    fun signUp(user: User): User {
         return db.save(user)
     }
 
