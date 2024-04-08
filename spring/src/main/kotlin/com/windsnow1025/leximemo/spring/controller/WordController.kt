@@ -49,6 +49,24 @@ class WordController(val service: WordService) {
         }
     }
 
+    @GetMapping("/word/[id]")
+    fun getWord(
+            @RequestHeader("Authorization") token: String,
+            @RequestParam("id") id: String
+    ): ResponseEntity<Word> {
+        try {
+            val specificWords = service.getWord(token, id)
+            return ResponseEntity.ok(specificWords)
+        } catch (e: SignatureException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: MalformedJwtException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: Exception) {
+            println(e)
+            return ResponseEntity.internalServerError().build()
+        }
+    }
+
     @PostMapping("/word/add")
     fun addWord(@RequestHeader("Authorization") token: String, @RequestBody word: Word): ResponseEntity<Any> {
         try {
