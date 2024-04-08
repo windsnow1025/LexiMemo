@@ -20,6 +20,11 @@ class WordService(val db: WordRepository) {
         return db.findByWord(word)
     }
 
+    fun getWordById(token: String, id: int): Word?{
+        val username = parseUsernameFromToken(token)
+        return db.findById(word)
+    }
+
     @Autowired
     lateinit var userRepository: UserRepository
     fun addWord(token: String, word: Word): Word? {
