@@ -68,7 +68,7 @@ class WordController(val service: WordService) {
         }
     }
 
-    @PostMapping("/word/add")
+    @PostMapping("/word")
     fun addWord(@RequestHeader("Authorization") token: String, @RequestBody word: Word): ResponseEntity<Any> {
         try {
             return if (service.addWord(token, word) != null) {
