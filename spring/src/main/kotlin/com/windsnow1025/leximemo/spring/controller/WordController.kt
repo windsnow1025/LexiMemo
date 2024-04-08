@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.SignatureException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -49,10 +50,10 @@ class WordController(val service: WordService) {
         }
     }
 
-    @GetMapping("/word/[id]")
+    @GetMapping("/word/{id}")
     fun getWord(
             @RequestHeader("Authorization") token: String,
-            @RequestParam("id") id: String
+            @PathVariable("id") id: String
     ): ResponseEntity<Word> {
         try {
             val specificWords = service.getWord(token, id)
