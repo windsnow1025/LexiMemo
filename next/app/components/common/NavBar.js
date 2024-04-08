@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,6 +15,13 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import AutocompleteAdmin from './AutocompleteAdmin';
+
+const drawerWidth = 240;
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -46,7 +53,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
         width: '100%',
@@ -57,8 +63,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -78,6 +85,14 @@ export default function PrimarySearchAppBar() {
 
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
+    };
+
+    const toggleDrawer = (open) => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+
+        setIsDrawerOpen(open);
     };
 
     const menuId = 'primary-search-account-menu';
@@ -163,7 +178,7 @@ export default function PrimarySearchAppBar() {
                         edge="start"
                         color="inherit"
                         aria-label="open drawer"
-                        sx={{ mr: 2 }}
+                        onClick={toggleDrawer(true)}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -173,17 +188,10 @@ export default function PrimarySearchAppBar() {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}
                     >
-                        MUI
+                        哐哐背单词
                     </Typography>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search>
+                    <Box sx={{ width: 50 }}/>
+                    <AutocompleteAdmin/>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
@@ -226,6 +234,26 @@ export default function PrimarySearchAppBar() {
                     </Box>
                 </Toolbar>
             </AppBar>
+            <Drawer
+                anchor="left"
+                open={isDrawerOpen}
+                onClose={toggleDrawer(false)}
+            >
+                <List>
+                    <ListItem button key={'主页'}>
+                        <ListItemText primary={'主页'} />
+                    </ListItem>
+                    <ListItem button key={'用户管理'}>
+                        <ListItemText primary={'用户管理'} />
+                    </ListItem>
+                    <ListItem button key={'单词管理'}>
+                        <ListItemText primary={'单词管理'} />
+                    </ListItem>
+                    <ListItem button key={'词书管理'}>
+                        <ListItemText primary={'词书管理'} />
+                    </ListItem>
+                </List>
+            </Drawer>
             {renderMobileMenu}
             {renderMenu}
         </Box>

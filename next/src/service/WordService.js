@@ -25,7 +25,7 @@ export default class WordService {
     async addWord(word, translation, exampleSentence, frequency) {
         const token = localStorage.getItem('token');
         try {
-            const res = await this.axiosInstance.post("/word/add", {
+            const res = await this.axiosInstance.post("/word", {
                 word,
                 translation,
                 exampleSentence,
