@@ -67,7 +67,7 @@ class WordController(val service: WordService) {
             return if (service.addWord(token, word) != null) {
                 ResponseEntity.ok().build()
             } else {
-                ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
             }
         } catch (e: SignatureException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
