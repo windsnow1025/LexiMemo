@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.naming.InsufficientResourcesException
 
 @RestController
 class WordController(val service: WordService) {
@@ -35,10 +34,10 @@ class WordController(val service: WordService) {
     @GetMapping("/word")
     fun getWord(
         @RequestHeader("Authorization") token: String,
-        @RequestBody wordMap: Map<String, String>
+        @RequestParam word: String
     ): ResponseEntity<Word> {
         try {
-            val specificWords = service.getWord(token, wordMap["word"] ?: error("Word not found"))
+            val specificWords = service.getWord(token, word)
             return ResponseEntity.ok(specificWords)
         } catch (e: SignatureException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
@@ -53,11 +52,11 @@ class WordController(val service: WordService) {
     @GetMapping("/word/{id}")
     fun getWord(
             @RequestHeader("Authorization") token: String,
-            @PathVariable("id") id: String
+            @PathVariable("id") id: Int
     ): ResponseEntity<Word> {
         try {
-            val specificWords = service.getWord(token, id)
-            return ResponseEntity.ok(specificWords)
+            val word: Word? = service.getWordById(token, id).orElse(null)
+            return ResponseEntity.ok(word)
         } catch (e: SignatureException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: MalformedJwtException) {
