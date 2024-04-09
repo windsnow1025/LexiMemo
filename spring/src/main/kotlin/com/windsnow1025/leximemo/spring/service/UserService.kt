@@ -7,14 +7,14 @@ import com.windsnow1025.leximemo.spring.repository.UserRepository
 import org.springframework.stereotype.Service
 
 @Service
-class UserService(val db: UserRepository) {
+class UserService(val userRepository: UserRepository) {
     fun getUser(token: String): User? {
         val username = parseUsernameFromToken(token)
-        return db.findByUsername(username)
+        return userRepository.findByUsername(username)
     }
 
     fun signIn(user: User): String? {
-        val existingUser = db.findByUsername(user.username!!)
+        val existingUser = userRepository.findByUsername(user.username!!)
         if (existingUser != null && existingUser.password == user.password) {
             return createTokenFromUsername(existingUser.username!!)
         }
@@ -22,12 +22,15 @@ class UserService(val db: UserRepository) {
     }
 
     fun signUp(user: User): User {
-        return db.save(user)
+        return userRepository.save(user)
     }
 
 
-    fun updatePasswordByToken(token: String, password: String): Boolean {
+    fun updatePasswordByToken(token: String, newPassword: String): Boolean {
         val username = parseUsernameFromToken(token)
-        return db.updatePasswordByUsername(password, username)
+        val user = userRepository.findByUsername(username) ?: return false
+        user.password = newPassword
+        userRepository.save(user)
+        return true
     }
 }
