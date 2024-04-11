@@ -1,19 +1,16 @@
 package com.windsnow1025.leximemo.spring.entity
 
-
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotNull
-
 
 @Entity
-@Table( name = "dictionary")
-open class Dictionary(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dictionary_id")
-    open var id: Int,
-
-    @Column(name = "dictionary_name")
-    @NotNull
-    open var dictionaryName:String
+class Dictionary(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Int? = null,
+    var name: String,
+    @ManyToMany
+    @JoinTable(
+        name = "dictionary_word",
+        joinColumns = [JoinColumn(name = "dictionary_id")],
+        inverseJoinColumns = [JoinColumn(name = "word_id")]
+    )
+    var words: MutableSet<Word> = mutableSetOf()
 )

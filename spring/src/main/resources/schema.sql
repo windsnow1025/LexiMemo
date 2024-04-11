@@ -15,17 +15,10 @@ CREATE TABLE IF NOT EXISTS word
     frequency        INT          NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS word_dictionary
-(
-    dictionary_id INT,
-    word_id INT,
-    PRIMARY KEY (dictionary_id, word_id)
-);
-
 CREATE TABLE IF NOT EXISTS dictionary
 (
-    dictionary_id INT AUTO_INCREMENT PRIMARY KEY ,
-    dictionary_name TEXT NOT NULL
+    id   INT AUTO_INCREMENT PRIMARY KEY,
+    name TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS user_word
@@ -37,5 +30,13 @@ CREATE TABLE IF NOT EXISTS user_word
     PRIMARY KEY (user_id, word_id),
     FOREIGN KEY (user_id) REFERENCES user (id),
     FOREIGN KEY (word_id) REFERENCES word (id)
-)
+);
+
+CREATE TABLE IF NOT EXISTS dictionary_word
+(
+    dictionary_id INT,
+    word_id       INT,
+    PRIMARY KEY (dictionary_id, word_id)
+);
+
 

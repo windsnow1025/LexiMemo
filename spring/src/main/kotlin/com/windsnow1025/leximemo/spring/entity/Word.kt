@@ -1,26 +1,21 @@
 package com.windsnow1025.leximemo.spring.entity
 
-
 import jakarta.persistence.*
-import org.springframework.data.relational.core.mapping.Table
 
 @Entity
-@Table(name = "word")
-open class Word(
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    open var id: Int?,
+class Word(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Int?,
+    var word: String,
 
-    @Column(name = "word", nullable = false)
-    open var word: String,
+    var translation: String,
 
-    @Column(nullable = false)
-    open var translation: String,
+    var exampleSentence: String,
 
+    var frequency: Int,
 
-    open var exampleSentence: String?,
+    @ManyToMany(mappedBy = "words")
+    var users: MutableSet<User> = mutableSetOf(),
 
-    @Column(nullable = false)
-    open var frequency: Int?
-
+    @ManyToMany(mappedBy = "words")
+    var dictionaries: MutableSet<Dictionary> = mutableSetOf()
 )

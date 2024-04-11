@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserService(val userRepository: UserRepository) {
-    fun getUser(token: String): User? {
+    fun getUserByToken(token: String): User? {
         val username = parseUsernameFromToken(token)
         return userRepository.findByUsername(username)
     }

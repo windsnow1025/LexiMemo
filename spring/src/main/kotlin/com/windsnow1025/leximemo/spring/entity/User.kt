@@ -2,23 +2,20 @@ package com.windsnow1025.leximemo.spring.entity
 
 import jakarta.persistence.*
 
-import org.springframework.data.relational.core.mapping.Table
-
 @Entity
-@Table(name = "user")
-open class User(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    open var id: Int?,
+class User(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Int? = null,
+    var username: String?,
 
-    @Column(name = "username", unique = true, nullable = false)
-    open var username: String?,
+    var password: String,
 
-    @Column(nullable = false)
-    open var password: String,
+    var type: String = "normal",
 
-    @Column(name = "user_type" ,nullable = false)
-    open var type: String = "normal"
-
-
+    @ManyToMany
+    @JoinTable(
+        name = "user_word",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "word_id")]
+    )
+    var words: MutableSet<Word> = mutableSetOf(),
 )

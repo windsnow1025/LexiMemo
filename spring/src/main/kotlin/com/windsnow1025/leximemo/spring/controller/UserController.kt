@@ -14,7 +14,7 @@ class UserController(val service: UserService) {
     @GetMapping("/user")
     fun getUser(@RequestHeader("Authorization") token: String): ResponseEntity<User> {
         try {
-            val user = service.getUser(token)
+            val user = service.getUserByToken(token)
             return ResponseEntity.ok(user)
         } catch (e: SignatureException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()

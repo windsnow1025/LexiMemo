@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestHeader
 
 @Controller
 class DictionaryController(val dictionaryService: DictionaryService) {
-    @GetMapping("/dictionary")
-    fun getDictionary(@RequestHeader("Authorization") token:String): ResponseEntity<List<Dictionary>> {
+    @GetMapping("/dictionaries")
+    fun getDictionary(@RequestHeader("Authorization") token: String): ResponseEntity<List<Dictionary>> {
         try {
-            val dictionarys = dictionaryService.getDictionaryList(token)
-            return ResponseEntity(dictionarys, HttpStatus.OK)
+            val dictionaries = dictionaryService.getDictionaries(token)
+            return ResponseEntity.ok(dictionaries)
         } catch (e: Exception) {
-            println(e.message)
+            println(e)
             return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
