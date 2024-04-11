@@ -6,6 +6,7 @@ import jakarta.persistence.*
 class Dictionary(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Int? = null,
     var name: String,
+
     @ManyToMany
     @JoinTable(
         name = "dictionary_word",

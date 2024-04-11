@@ -8,14 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class DictionaryService(val dictionaryRepository: DictionaryRepository) {
-    fun getDictionaries(token:String): List<Dictionary>{
+class DictionaryService(
+    val dictionaryRepository: DictionaryRepository,
+    val userRepository: UserRepository
+) {
+    fun getDictionaries(token: String): List<Dictionary> {
         parseUsernameFromToken(token)
         return dictionaryRepository.findAll()
     }
 
-    @Autowired
-    lateinit var userRepository: UserRepository
     fun addDictionary(token: String, dictionary: Dictionary): Dictionary? {
         val username = parseUsernameFromToken(token)
         if (userRepository.findByUsername(username)?.type != "admin") {

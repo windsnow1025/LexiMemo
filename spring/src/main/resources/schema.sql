@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS user
 CREATE TABLE IF NOT EXISTS word
 (
     id               INT AUTO_INCREMENT PRIMARY KEY,
-    word             VARCHAR(255) NOT NULL,
+    word             VARCHAR(255) NOT NULL UNIQUE,
     translation      VARCHAR(255) NOT NULL,
     example_sentence TEXT,
     frequency        INT          NOT NULL
