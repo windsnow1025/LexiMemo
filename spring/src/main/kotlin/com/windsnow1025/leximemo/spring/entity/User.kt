@@ -11,11 +11,6 @@ class User(
 
     var type: String = "normal",
 
-    @ManyToMany
-    @JoinTable(
-        name = "user_word",
-        joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "word_id")]
-    )
-    var words: MutableSet<Word> = mutableSetOf(),
+    @OneToMany(mappedBy = "user")
+    var userWords: MutableSet<UserWord> = mutableSetOf()
 )

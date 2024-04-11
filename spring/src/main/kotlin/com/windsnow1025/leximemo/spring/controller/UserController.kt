@@ -1,6 +1,7 @@
 package com.windsnow1025.leximemo.spring.controller
 
 import com.windsnow1025.leximemo.spring.entity.User
+import com.windsnow1025.leximemo.spring.entity.UserWord
 import com.windsnow1025.leximemo.spring.service.UserService
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.SignatureException
@@ -58,17 +59,27 @@ class UserController(val service: UserService) {
         try {
             service.updatePasswordByToken(token, user.password)
             return ResponseEntity.ok().build()
+        } catch (e: SignatureException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: MalformedJwtException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
         }
     }
 
-    @PostMapping("/user/words/{wordId}")
-    fun addWordToUser(@RequestHeader("Authorization") token: String, @PathVariable wordId: Int): ResponseEntity<Void> {
+    @PostMapping("/user/user-word")
+    fun addWordToUser(@RequestHeader("Authorization") token: String, @RequestBody userWord: UserWord): ResponseEntity<Void> {
         try {
-            service.addWordToUser(token, wordId)
+            service.addWordToUser(token, userWord)
             return ResponseEntity.ok().build()
+        } catch (e: SignatureException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: MalformedJwtException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: DataIntegrityViolationException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build()
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()

@@ -3,15 +3,17 @@ package com.windsnow1025.leximemo.spring.service
 import com.windsnow1025.leximemo.spring.logic.createTokenFromUsername
 import com.windsnow1025.leximemo.spring.logic.parseUsernameFromToken
 import com.windsnow1025.leximemo.spring.entity.User
-import com.windsnow1025.leximemo.spring.entity.Word
+import com.windsnow1025.leximemo.spring.entity.UserWord
 import com.windsnow1025.leximemo.spring.repository.UserRepository
+import com.windsnow1025.leximemo.spring.repository.UserWordRepository
 import com.windsnow1025.leximemo.spring.repository.WordRepository
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(
     val userRepository: UserRepository,
-    val wordRepository: WordRepository
+    val wordRepository: WordRepository,
+    val userWordRepository: UserWordRepository
 ) {
     fun getUserByToken(token: String): User? {
         val username = parseUsernameFromToken(token)
@@ -39,13 +41,16 @@ class UserService(
         return true
     }
 
-    fun addWordToUser(token: String, wordId: Int): Boolean {
+    fun addWordToUser(token: String, userWord: UserWord): UserWord {
         val username = parseUsernameFromToken(token)
-        val user = userRepository.findByUsername(username)!!
-        val word: Word = wordRepository.findById(wordId).orElse(null)!!
 
-        user.words.add(word)
-        userRepository.save(user)
-        return true
+        val user = userRepository.findByUsername(username)!!
+        val word = wordRepository.findById(userWord.wordId).orElse(null)
+
+        userWord.userId = user.id
+        userWord.user = user
+        userWord.word = word
+
+        return userWordRepository.save(userWord)
     }
 }

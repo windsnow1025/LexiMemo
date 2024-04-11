@@ -13,8 +13,8 @@ class Word(
 
     var frequency: Int,
 
-    @ManyToMany(mappedBy = "words")
-    var users: MutableSet<User> = mutableSetOf(),
+    @OneToMany(mappedBy = "word")
+    var userWords: MutableSet<UserWord> = mutableSetOf(),
 
     @ManyToMany(mappedBy = "words")
     var dictionaries: MutableSet<Dictionary> = mutableSetOf()
