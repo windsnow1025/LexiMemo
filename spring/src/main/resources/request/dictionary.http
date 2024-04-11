@@ -1,3 +1,3 @@
 ### Get dictionaries
-GET http://localhost:8080/dictionaries
+GET /dictionaries
 Authorization: {{token}}

@@ -1,2 +1,2 @@
 ### Get Root
-GET http://localhost:8080/
+GET {{baseUrl}}/

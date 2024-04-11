@@ -1,10 +1,10 @@
 ### Get User
-GET http://localhost:8080/user
+GET {{baseUrl}}/user
 Authorization: {{token}}
 
 ### Post Sign In (Normal)
 
-POST http://localhost:8080/user/sign-in
+POST {{baseUrl}}/user/sign-in
 Content-Type: application/json
 
 {
@@ -14,7 +14,7 @@ Content-Type: application/json
 
 ### Post Sign In (Admin)
 
-POST http://localhost:8080/user/sign-in
+POST {{baseUrl}}/user/sign-in
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 
 ### Post Sign Up (Normal)
 
-POST http://localhost:8080/user/sign-up
+POST {{baseUrl}}/user/sign-up
 Content-Type: application/json
 
 {
@@ -34,7 +34,7 @@ Content-Type: application/json
 
 ### Post Sign Up (Admin)
 
-POST http://localhost:8080/user/sign-up
+POST {{baseUrl}}/user/sign-up
 Content-Type: application/json
 
 {
@@ -45,7 +45,7 @@ Content-Type: application/json
 
 ### Post UpdatePassword
 
-POST http://localhost:8080/user/password
+POST {{baseUrl}}/user/password
 Content-Type: application/json
 Authorization: {{token}}
 
@@ -55,7 +55,7 @@ Authorization: {{token}}
 
 ### Post User Word
 
-POST http://localhost:8080/user/user-word
+POST {{baseUrl}}/user/user-word
 Content-Type: application/json
 Authorization: {{token}}
 

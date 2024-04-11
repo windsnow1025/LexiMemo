@@ -1,5 +1,5 @@
 ### Get words
-GET http://localhost:8080/words
+GET {{baseUrl}}/words
 Authorization: {{token}}
 
 #[
@@ -15,7 +15,7 @@ Authorization: {{token}}
 #]
 
 ### Get word by name
-GET http://localhost:8080/word?word=abandon
+GET {{baseUrl}}/word?word=abandon
 Authorization: {{token}}
 
 #{
@@ -29,7 +29,7 @@ Authorization: {{token}}
 #}
 
 ### Get word by id
-GET http://localhost:8080/word/1
+GET {{baseUrl}}/word/1
 Authorization: {{token}}
 
 #{
@@ -43,7 +43,7 @@ Authorization: {{token}}
 #}
 
 ### Post word (require admin)
-POST http://localhost:8080/word
+POST {{baseUrl}}/word
 Authorization: {{token}}
 Content-Type: application/json
 
