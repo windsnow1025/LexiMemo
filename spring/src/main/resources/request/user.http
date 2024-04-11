@@ -53,3 +53,7 @@ Authorization: {{token}}
   "password": "test"
 }
 
+### Post User Word
+
+POST http://localhost:8080/user/words/1
+Authorization: {{token}}

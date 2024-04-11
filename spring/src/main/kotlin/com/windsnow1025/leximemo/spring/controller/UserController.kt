@@ -63,4 +63,15 @@ class UserController(val service: UserService) {
             return ResponseEntity.internalServerError().build()
         }
     }
+
+    @PostMapping("/user/words/{wordId}")
+    fun addWordToUser(@RequestHeader("Authorization") token: String, @PathVariable wordId: Int): ResponseEntity<Void> {
+        try {
+            service.addWordToUser(token, wordId)
+            return ResponseEntity.ok().build()
+        } catch (e: Exception) {
+            println(e)
+            return ResponseEntity.internalServerError().build()
+        }
+    }
 }
