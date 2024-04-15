@@ -5,27 +5,36 @@ export class WordLogic {
         this.wordService = new WordService();
     }
 
-    async getWords() {
+    async getWords(token) {
         try {
-            return await this.wordService.getWords();
+            return await this.wordService.getWords(token);
         } catch (err) {
             console.error(err);
             throw new Error("Failed to fetch words.");
         }
     }
 
-    async getWord(word) {
+    async getWordByName(token, word) {
         try {
-            return await this.wordService.getWord(word);
+            return await this.wordService.getWordByName(token, word);
         } catch (err) {
             console.error(err);
-            throw new Error("Failed to fetch word.");
+            throw new Error("Failed to fetch word by name.");
         }
     }
 
-    async addWord(word, translation, exampleSentence, frequency) {
+    async getWordById(token, id) {
         try {
-            await this.wordService.addWord(word, translation, exampleSentence, frequency);
+            return await this.wordService.getWordById(token, id);
+        } catch (err) {
+            console.error(err);
+            throw new Error("Failed to fetch word by ID.");
+        }
+    }
+
+    async addWord(token, word, translation, exampleSentence, frequency) {
+        try {
+            await this.wordService.addWord(token, word, translation, exampleSentence, frequency);
         } catch (err) {
             // Handle specific error based on the thrown error message
             if (err.message === "Insufficient permission to add word") {
@@ -36,6 +45,4 @@ export class WordLogic {
             }
         }
     }
-
-
 }

@@ -5,25 +5,44 @@ export default class WordService {
         this.axiosInstance = axios.create({ baseURL: process.env.NEXT_PUBLIC_NODE_API_BASE_URL });
     }
 
-    async getWords() {
-        const token = localStorage.getItem('token');
-        const res = await this.axiosInstance.get("/words", {
-            headers: { Authorization: token }
-        });
-        return res.data;
+    async getWords(token) {
+        try {
+            const res = await this.axiosInstance.get("/words", {
+                headers: { Authorization: token }
+            });
+            return res.data;
+        } catch (error) {
+            console.error("Error fetching words:", error);
+            throw error;
+        }
     }
 
-    async getWord(word) {
-        const token = localStorage.getItem('token');
-        const res = await this.axiosInstance.get("/word", {
-            params: { word },
-            headers: { Authorization: token }
-        });
-        return res.data;
+    async getWordByName(token, word) {
+        try {
+            const res = await this.axiosInstance.get("/word", {
+                params: { word },
+                headers: { Authorization: token }
+            });
+            return res.data;
+        } catch (error) {
+            console.error("Error fetching word by name:", error);
+            throw error;
+        }
     }
 
-    async addWord(word, translation, exampleSentence, frequency) {
-        const token = localStorage.getItem('token');
+    async getWordById(token, id) {
+        try {
+            const res = await this.axiosInstance.get(`/word/${id}`, {
+                headers: { Authorization: token }
+            });
+            return res.data;
+        } catch (error) {
+            console.error("Error fetching word by ID:", error);
+            throw error;
+        }
+    }
+
+    async addWord(token, word, translation, exampleSentence, frequency) {
         try {
             const res = await this.axiosInstance.post("/word", {
                 word,
@@ -35,9 +54,8 @@ export default class WordService {
             });
             return res.data;
         } catch (error) {
-            // Handle error if userType is not admin
-            console.error("Insufficient permission to add word");
-            throw error; // Re-throw to allow further error handling
+            console.error("Error adding word:", error);
+            throw error;
         }
     }
 }
