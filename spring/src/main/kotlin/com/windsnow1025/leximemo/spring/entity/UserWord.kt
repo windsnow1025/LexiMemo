@@ -1,5 +1,6 @@
 package com.windsnow1025.leximemo.spring.entity
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import java.util.Date
 
@@ -20,9 +21,11 @@ class UserWord(
 
     @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JsonManagedReference
     var user: User?,
 
     @ManyToOne
     @JoinColumn(name = "word_id", insertable = false, updatable = false)
+    @JsonManagedReference
     var word: Word?
 )

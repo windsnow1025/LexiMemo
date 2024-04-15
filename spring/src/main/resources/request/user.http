@@ -53,6 +53,11 @@ Authorization: {{token}}
   "password": "test"
 }
 
+### GET User Word
+
+GET {{baseUrl}}/user/user-word
+Authorization: {{token}}
+
 ### Post User Word
 
 POST {{baseUrl}}/user/user-word
