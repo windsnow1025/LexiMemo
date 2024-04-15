@@ -20,6 +20,13 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import AutocompleteAdmin from './AutocompleteAdmin';
+import UserService from '../../../src/service/UserService';
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import TextField from "@mui/material/TextField";
+import DialogActions from "@mui/material/DialogActions";
+import {Button} from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -66,6 +73,12 @@ export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
+    const [isRegisterDialogOpen, setIsRegisterDialogOpen] = useState(false);
+
+    const userService = new UserService();
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -95,6 +108,34 @@ export default function PrimarySearchAppBar() {
         setIsDrawerOpen(open);
     };
 
+    const handleLogin = async () => {
+        // Perform login action using UserService
+        try {
+            await userService.signIn(username, password);
+            // Clear input fields after successful login
+            setUsername('');
+            setPassword('');
+            // Close the login dialog
+            setIsLoginDialogOpen(false);
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
+    };
+
+    const handleRegister = async () => {
+        // Perform register action using UserService
+        try {
+            await userService.signUp(username, password);
+            // Clear input fields after successful registration
+            setUsername('');
+            setPassword('');
+            // Close the register dialog
+            setIsRegisterDialogOpen(false);
+        } catch (error) {
+            console.error('Registration failed:', error);
+        }
+    };
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -112,8 +153,8 @@ export default function PrimarySearchAppBar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={() => setIsLoginDialogOpen(true)}>登录</MenuItem>
+            <MenuItem onClick={() => setIsRegisterDialogOpen(true)}>注册</MenuItem>
         </Menu>
     );
 
@@ -256,6 +297,63 @@ export default function PrimarySearchAppBar() {
             </Drawer>
             {renderMobileMenu}
             {renderMenu}
+
+            {/* Login Dialog */}
+            <Dialog open={isLoginDialogOpen} onClose={() => setIsLoginDialogOpen(false)}>
+                <DialogTitle>登录</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="用户名"
+                        type="text"
+                        fullWidth
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="密码"
+                        type="password"
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsLoginDialogOpen(false)}>取消</Button>
+                    <Button onClick={handleLogin}>登录</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Register Dialog */}
+            <Dialog open={isRegisterDialogOpen} onClose={() => setIsRegisterDialogOpen(false)}>
+                <DialogTitle>注册</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="用户名"
+                        type="text"
+                        fullWidth
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="密码"
+                        type="password"
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsRegisterDialogOpen(false)}>取消</Button>
+                    <Button onClick={handleRegister}>注册</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }
