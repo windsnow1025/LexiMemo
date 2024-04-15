@@ -1,3 +1,18 @@
 ### Get dictionaries
 GET /dictionaries
 Authorization: {{token}}
+
+### Get dictionary words
+GET {{baseUrl}}/dictionary/1
+Authorization: {{token}}
+
+### Post word to dictionary
+POST {{baseUrl}}/dictionary/add
+Authorization: {{token}}
+Content-Type: application/json
+
+
+{
+ "wordName": "able",
+ "dictionaryName": "高考英语词汇"
+}

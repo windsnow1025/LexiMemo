@@ -1,6 +1,7 @@
 package com.windsnow1025.leximemo.spring.entity
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
 @Entity
@@ -19,5 +20,6 @@ class Word(
     var userWords: MutableSet<UserWord> = mutableSetOf(),
 
     @ManyToMany(mappedBy = "words")
+    @JsonManagedReference
     var dictionaries: MutableSet<Dictionary> = mutableSetOf()
 )
