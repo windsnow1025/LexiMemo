@@ -1,5 +1,7 @@
 package com.windsnow1025.leximemo.spring.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
 @Entity
@@ -12,5 +14,6 @@ class User(
     var type: String = "normal",
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     var userWords: MutableSet<UserWord> = mutableSetOf()
 )

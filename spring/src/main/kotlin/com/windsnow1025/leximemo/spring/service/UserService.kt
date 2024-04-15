@@ -41,15 +41,21 @@ class UserService(
         return true
     }
 
+    fun getUserWords(token: String): List<UserWord> {
+        val username: String = parseUsernameFromToken(token)
+        val user = userRepository.findByUsername(username)!!
+        return userWordRepository.findByUserId(user.id!!)
+    }
+
     fun addWordToUser(token: String, userWord: UserWord): UserWord {
         val username = parseUsernameFromToken(token)
 
         val user = userRepository.findByUsername(username)!!
-        val word = wordRepository.findById(userWord.wordId).orElse(null)
+//        val word = wordRepository.findById(userWord.wordId).orElse(null)
 
         userWord.userId = user.id
-        userWord.user = user
-        userWord.word = word
+//        userWord.user = user
+//        userWord.word = word
 
         return userWordRepository.save(userWord)
     }

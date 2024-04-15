@@ -69,6 +69,23 @@ class UserController(val service: UserService) {
         }
     }
 
+    @GetMapping("/user/user-word")
+    fun addWordToUser(@RequestHeader("Authorization") token: String): ResponseEntity<List<UserWord>> {
+        try {
+            val userWord = service.getUserWords(token)
+            return ResponseEntity.ok(userWord)
+        } catch (e: SignatureException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: MalformedJwtException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: DataIntegrityViolationException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build()
+        } catch (e: Exception) {
+            println(e)
+            return ResponseEntity.internalServerError().build()
+        }
+    }
+
     @PostMapping("/user/user-word")
     fun addWordToUser(@RequestHeader("Authorization") token: String, @RequestBody userWord: UserWord): ResponseEntity<Void> {
         try {
