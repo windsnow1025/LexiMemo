@@ -34,4 +34,19 @@ class WordService(
         }
         return wordRepository.save(word)
     }
+
+    fun addWords(token: String, words: List<Word>): Boolean {
+        val username = parseUsernameFromToken(token)
+        val user = userRepository.findByUsername(username)
+
+        if (user?.type != "admin") {
+            return false
+        }
+
+        words.forEach{
+            word -> wordRepository.save(word)
+        }
+
+        return true
+    }
 }
