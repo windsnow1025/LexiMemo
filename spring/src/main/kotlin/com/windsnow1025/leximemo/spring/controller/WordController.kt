@@ -78,4 +78,23 @@ class WordController(val service: WordService) {
             return ResponseEntity.internalServerError().build()
         }
     }
+
+    @PostMapping("/words")
+    fun addWords(@RequestHeader("Authorization") token: String, @RequestBody words: List<Word>): ResponseEntity<Any> {
+        try {
+            val result = service.addWords(token, words)
+            return if (result) {
+                ResponseEntity.ok().build()
+            } else {
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+            }
+        }catch (e : SignatureException){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        }catch (e : MalformedJwtException){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        }catch (e : Exception){
+            println(e)
+            return ResponseEntity.internalServerError().build()
+        }
+    }
 }

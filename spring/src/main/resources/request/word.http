@@ -53,3 +53,24 @@ Content-Type: application/json
   "exampleSentence": "We had to abandon the car. By the time the rebel troops arrived, the village had already been abandoned.",
   "frequency": 10
 }
+
+### Add words (require admin)
+POST {{baseUrl}}/words
+Authorization: {{token}}
+Content-Type: application/json
+
+[
+  {
+    "word": "example1",
+    "translation": "示例1的翻译",
+    "exampleSentence": "this is an example",
+    "frequency": 5
+  },
+  {
+    "word": "example2",
+    "translation": "示例2的翻译",
+    "exampleSentence": "this is another example",
+    "frequency": 6
+  }
+]
+
