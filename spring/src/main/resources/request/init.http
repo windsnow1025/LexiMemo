@@ -1,0 +1,121 @@
+### Add words (require admin)
+POST {{baseUrl}}/words
+Authorization: {{token}}
+Content-Type: application/json
+
+[
+  {
+    "word": "art",
+    "translation": " 一(个);每一(个);(同类事物中)任一个",
+    "exampleSentence": "I need a pencil to write a letter.",
+    "frequency": 5
+  },
+  {
+    "word": "abandon",
+    "translation": "vt.离弃，丢弃;遗弃，抛弃;放弃",
+    "exampleSentence": "She had to abandon her car when it broke down.",
+    "frequency": 4
+  },
+  {
+    "word": "abdomen",
+    "translation": "n.腹，下腹(胸部到腿部的部分)",
+    "exampleSentence": "He was experiencing pain in his abdomen.",
+    "frequency": 3
+  },
+  {
+    "word": "abatement",
+    "translation": "n.减(免)税，打折扣，冲销",
+    "exampleSentence": "The government announced an abatement in property taxes.",
+    "frequency": 2
+  },
+  {
+    "word": "abide",
+    "translation": "vi.(abode，abided)(by)遵守;坚持;vt.忍受，容忍",
+    "exampleSentence": "We must abide by the rules of the game.",
+    "frequency": 1
+  },
+  {
+    "word": "ability",
+    "translation": "n.能力;本领;才能，才干;专门技能，天资",
+    "exampleSentence": "Her ability to speak multiple languages is very impressive.",
+    "frequency": 5
+  },
+  {
+    "word": "able",
+    "translation": "a.有(能力、时间、知识等)做某事，有本事的",
+    "exampleSentence": "He is an able student, always completing assignments on time.",
+    "frequency": 4
+  },
+  {
+    "word": "abnormal",
+    "translation": "a.反常的，不正常的，不规则的",
+    "exampleSentence": "The doctor noticed an abnormal heartbeat during the examination.",
+    "frequency": 3
+  },
+  {
+    "word": "aboard",
+    "translation": "ad.&prep.在船(飞机、车)上;ad.上船(飞机、车)",
+    "exampleSentence": "The passengers went aboard the cruise ship for their vacation.",
+    "frequency": 2
+  },
+  {
+    "word": "abolish",
+    "translation": "vt.废除(法律、习惯等);取消",
+    "exampleSentence": "Many people are fighting to abolish the death penalty.",
+    "frequency": 1
+  },
+  {
+    "word": "abound",
+    "translation": "vi.大量存在;(~in，~with)充满，富于",
+    "exampleSentence": "Fish abound in the clear waters of the lake.",
+    "frequency": 5
+  },
+  {
+    "word": "about",
+    "translation": "ad.在周围;大约 prep.关于;在周围 a.准备",
+    "exampleSentence": "The book is about a young girl's journey to adulthood.",
+    "frequency": 4
+  },
+  {
+    "word": "above",
+    "translation": "a.上述的 ad.在上面,在前文 prep.在..之上，高于",
+    "exampleSentence": "The information mentioned above is crucial to the case.",
+    "frequency": 3
+  },
+  {
+    "word": "abroad",
+    "translation": "ad.到国外，在国外;在传播，在流传",
+    "exampleSentence": "They are planning to travel abroad next summer.",
+    "frequency": 2
+  },
+  {
+    "word": "abrupt",
+    "translation": "a.突然的，出其不意的;(行为等)粗鲁无礼的",
+    "exampleSentence": "She made an abrupt turn to avoid hitting the pedestrian.",
+    "frequency": 1
+  },
+  {
+    "word": "absence",
+    "translation": "n.缺乏，不存在;缺席，不在场;缺席的时间",
+    "exampleSentence": "Her absence was noted by her co-workers.",
+    "frequency": 5
+  },
+  {
+    "word": "absent",
+    "translation": "a.缺席的;缺乏的,不存在的;心不在焉的",
+    "exampleSentence": "She seems absent-minded today, not focusing on her work.",
+    "frequency": 4
+  },
+  {
+    "word": "absolute",
+    "translation": "a.绝对的，完全的;确实的，肯定的",
+    "exampleSentence": "The museum has an absolute rule against touching the exhibits.",
+    "frequency": 3
+  },
+  {
+    "word": "absorb",
+    "translation": "vt.吸收(水、光、蒸汽等);使全神贯注;吞并/兼并",
+    "exampleSentence": "This fabric can absorb liquids quickly an",
+    "frequency": 2
+  }
+]
