@@ -49,4 +49,18 @@ class WordService(
 
         return true
     }
+
+    fun deleteWordById(token: String, id: Int): Boolean {
+        val username = parseUsernameFromToken(token)
+        if (userRepository.findByUsername(username)?.type != "admin") {
+            return false
+        }
+        if (wordRepository.existsById(id)){
+            wordRepository.deleteById(id)
+            return true
+        }
+        return false
+    }
+
+
 }

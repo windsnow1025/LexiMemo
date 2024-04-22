@@ -32,15 +32,15 @@ Authorization: {{token}}
 GET {{baseUrl}}/word/1
 Authorization: {{token}}
 
-#{
-#  "id": 1,
-#  "word": "abandon",
-#  "translation": "离弃;放弃;抛弃;遗弃",
-#  "exampleSentence": "We had to abandon the car. By the time the rebel troops arrived, the village had already been abandoned.",
-#  "frequency": 10,
-#  "users": [],
-#  "dictionaries": []
-#}
+{
+  "id": 1,
+  "word": "abandon",
+  "translation": "离弃;放弃;抛弃;遗弃",
+  "exampleSentence": "We had to abandon the car. By the time the rebel troops arrived, the village had already been abandoned.",
+  "frequency": 10,
+  "users": [],
+  "dictionaries": []
+}
 
 ### Post word (require admin)
 POST {{baseUrl}}/word
@@ -73,4 +73,9 @@ Content-Type: application/json
     "frequency": 6
   }
 ]
+
+### Delete Word By Id(require admin)
+POST {{baseUrl}}/word/1
+Authorization: {{token}}
+Content-Type: application/json
 

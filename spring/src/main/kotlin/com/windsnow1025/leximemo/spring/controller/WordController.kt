@@ -97,4 +97,23 @@ class WordController(val service: WordService) {
             return ResponseEntity.internalServerError().build()
         }
     }
+
+    @PostMapping("/word/{id}")
+    fun deleteWordById(@RequestHeader("Authorization") token: String, @PathVariable("id") id: Int): ResponseEntity<Any> {
+        try {
+            return if (service.deleteWordById(token, id)){
+                ResponseEntity.ok().build()
+            }else{
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+            }
+        }catch (e : SignatureException){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        }catch (e : MalformedJwtException){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        }catch (e : Exception){
+            println(e)
+            return ResponseEntity.internalServerError().build()
+        }
+    }
+
 }
