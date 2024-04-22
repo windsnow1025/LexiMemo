@@ -1,6 +1,15 @@
 ### Get dictionaries
-GET /dictionaries
+GET {{baseUrl}}/dictionaries
 Authorization: {{token}}
+
+### Post dictionary
+POST {{baseUrl}}/dictionary
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "考研词书1"
+}
 
 ### Get dictionary words
 GET {{baseUrl}}/dictionary/1
