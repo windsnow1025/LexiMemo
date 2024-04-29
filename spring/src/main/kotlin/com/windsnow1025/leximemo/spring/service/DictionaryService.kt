@@ -47,7 +47,16 @@ class DictionaryService(
         return dictionaryRepository.save(dictionary)
     }
 
-    fun deleteWord(token: String, dictionaryId: Int, wordId: Int) {
+    fun deleteWordFromDictionary(token: String, wordId: Int, dictionaryId: Int): Dictionary? {
+        val username = parseUsernameFromToken(token)
+        if (userRepository.findByUsername(username)?.type != "admin") {
+            return null
+        }
 
+        val word = wordRepository.findById(wordId).orElse(null)
+        val dictionary = dictionaryRepository.findById(dictionaryId).orElse(null)
+
+        dictionary.words.remove(word)
+        return dictionaryRepository.save(dictionary)
     }
 }

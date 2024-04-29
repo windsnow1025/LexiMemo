@@ -19,3 +19,8 @@ Authorization: {{token}}
 POST {{baseUrl}}/dictionary/1/word/10
 Authorization: {{token}}
 Content-Type: application/json
+
+### Delete link word to dictionary
+DELETE {{baseUrl}}/dictionary/1/word/10
+Authorization: {{token}}
+Content-Type: application/json

@@ -64,13 +64,21 @@ class DictionaryController(val dictionaryService: DictionaryService) {
         }
     }
 
-//    @DeleteMapping("/dictionary/{dictionaryId}/word/{wordId}")
-//    fun deleteDictionaryWord(
-//        @RequestHeader("Authorization") token: String,
-//        @PathVariable("dictionaryId") dictionaryId: Int,
-//        @PathVariable("wordId") wordId: Int
-//    ): ResponseEntity<Any>{
-//
-//    }
-
+    @DeleteMapping("/dictionary/{dictionaryId}/word/{wordId}")
+    fun deleteDictionaryWord(
+        @RequestHeader("Authorization") token: String,
+        @PathVariable("dictionaryId") dictionaryId: Int,
+        @PathVariable("wordId") wordId: Int
+    ): ResponseEntity<Any>{
+        try {
+            return if (dictionaryService.deleteWordFromDictionary(token, wordId, dictionaryId) !== null) {
+                ResponseEntity.ok().build()
+            } else {
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+            }
+        } catch (e: Exception) {
+            println(e)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+        }
+    }
 }
