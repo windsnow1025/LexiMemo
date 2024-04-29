@@ -1,5 +1,6 @@
 function getDailyFamiliarity(knownCount: number, unknownCount: number): number {
-  return 0.5 * knownCount - 0.7 * unknownCount;
+  let dailyFamiliarity = 0.5 * knownCount - 0.7 * unknownCount;
+  return Math.min(Math.max(dailyFamiliarity, 0), 1);
 }
 
 function addToFamiliarityVector(familiarityVector: number[], dailyFamiliarity: number) {
