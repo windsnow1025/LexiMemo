@@ -29,6 +29,7 @@ import DialogActions from "@mui/material/DialogActions";
 import { Button } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import ThemeSelect from "./ThemeSelect";
 
 const drawerWidth = 240;
 
@@ -241,68 +242,71 @@ export default function PrimarySearchAppBar() {
             <AppBar position="static">
                 <Toolbar>
                     <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={toggleDrawer(true)}
+                      size="large"
+                      edge="start"
+                      color="inherit"
+                      aria-label="open drawer"
+                      onClick={toggleDrawer(true)}
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                     <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
+                      variant="h6"
+                      noWrap
+                      component="div"
+                      sx={{display: {xs: 'none', sm: 'block'}}}
                     >
                         哐哐背单词
                     </Typography>
-                    <Box sx={{ width: 50 }}/>
+                    <Box sx={{width: 50}}/>
                     <AutocompleteAdmin/>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{flexGrow: 1}}/>
+                    <Box sx={{display: {xs: 'none', md: 'flex'}}}>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="secondary">
-                                <MailIcon />
+                                <MailIcon/>
                             </Badge>
                         </IconButton>
                         <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            color="inherit"
+                          size="large"
+                          aria-label="show 17 new notifications"
+                          color="inherit"
                         >
                             <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon />
+                                <NotificationsIcon/>
                             </Badge>
                         </IconButton>
                         <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
+                          size="large"
+                          edge="end"
+                          aria-label="account of current user"
+                          aria-controls={menuId}
+                          aria-haspopup="true"
+                          onClick={handleProfileMenuOpen}
+                          color="inherit"
                         >
-                            <AccountCircle />
+                            <AccountCircle/>
                         </IconButton>
                     </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                    <Box sx={{display: {xs: 'flex', md: 'none'}}}>
                         <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
+                          size="large"
+                          aria-label="show more"
+                          aria-controls={mobileMenuId}
+                          aria-haspopup="true"
+                          onClick={handleMobileMenuOpen}
+                          color="inherit"
                         >
-                            <MoreIcon />
+                            <MoreIcon/>
                         </IconButton>
+                    </Box>
+                    <Box sx={{ m: 2 }}>
+                        <ThemeSelect/>
                     </Box>
                 </Toolbar>
             </AppBar>
             <Drawer
-                anchor="left"
+              anchor="left"
                 open={isDrawerOpen}
                 onClose={toggleDrawer(false)}
             >

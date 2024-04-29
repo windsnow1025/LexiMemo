@@ -23,7 +23,7 @@ const ThemeSelect = () => {
 
   return (
     <div>
-      <FormControl fullWidth className="mt-2">
+      <FormControl color="secondary" fullWidth className="mt-2">
         <InputLabel id="theme-select-label">Theme</InputLabel>
         <Select
           labelId="theme-select-label"
