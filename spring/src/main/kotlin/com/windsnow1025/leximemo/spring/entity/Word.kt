@@ -7,6 +7,8 @@ import jakarta.persistence.*
 @Entity
 class Word(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Int?,
+
+    @Column(unique = true)
     var word: String,
 
     var translation: String,
