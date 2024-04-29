@@ -24,7 +24,7 @@ export default function AutocompleteAdmin() {
                     path += 'WordManagement';
                     break;
                 case '词书管理':
-                    path += 'WordBankManagement';
+                    path += 'DictionaryManagement';
                     break;
                 default:
                     break;

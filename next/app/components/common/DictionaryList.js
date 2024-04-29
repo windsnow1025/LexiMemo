@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -18,7 +17,6 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import AddIcon from '@mui/icons-material/Add';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -27,59 +25,44 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { visuallyHidden } from '@mui/utils';
-import { WordLogic } from "../../../src/logic/WordLogic";
+import { DictionaryLogic } from '../../../src/logic/DictionaryLogic';
 
-function createData(id, word, translation, exampleSentence) {
-    return { id, word, translation, exampleSentence };
+function createData(id, name) {
+    return { id, name };
 }
 
 const headCells = [
     {
-        id: 'word',
+        id: 'name',
         numeric: false,
         disablePadding: false,
-        label: 'Word',
-    },
-    {
-        id: 'translation',
-        numeric: false,
-        disablePadding: false,
-        label: 'Translation',
-    },
-    {
-        id: 'exampleSentence',
-        numeric: false,
-        disablePadding: false,
-        label: 'Example Sentence',
+        label: 'Dictionary Name',
     },
 ];
 
-export default function WordList() {
+export default function DictionaryList() {
     const [order, setOrder] = useState('asc');
-    const [orderBy, setOrderBy] = useState('word');
+    const [orderBy, setOrderBy] = useState('name');
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [words, setWords] = useState([]);
+    const [dictionaries, setDictionaries] = useState([]);
     const [open, setOpen] = useState(false);
-    const [newWord, setNewWord] = useState('');
-    const [newTranslation, setNewTranslation] = useState('');
-    const [newExampleSentence, setNewExampleSentence] = useState('');
+    const [newDictionaryName, setNewDictionaryName] = useState('');
 
     useEffect(() => {
-        async function fetchWords() {
+        async function fetchDictionaries() {
             try {
                 const token = localStorage.getItem('token');
-                const wordLogic = new WordLogic();
-                const fetchedWords = await wordLogic.getWords(token);
-                console.log(fetchedWords);
-                setWords(fetchedWords);
+                const dictionaryLogic = new DictionaryLogic();
+                const fetchedDictionaries = await dictionaryLogic.getDictionaries(token);
+                setDictionaries(fetchedDictionaries);
             } catch (error) {
-                console.error('Error fetching words:', error);
+                console.error('Error fetching dictionaries:', error);
             }
         }
 
-        fetchWords();
+        fetchDictionaries();
     }, []);
 
     const handleRequestSort = (event, property) => {
@@ -119,19 +102,18 @@ export default function WordList() {
     const isSelected = (id) => selected.indexOf(id) !== -1;
 
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - words.length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dictionaries.length) : 0;
 
-    const handleAddWord = async () => {
+    const handleAddDictionary = async () => {
         try {
             const token = localStorage.getItem('token');
-            const wordLogic = new WordLogic();
-            await wordLogic.addWord(token, newWord, newTranslation, newExampleSentence);
-            // 添加单词后重新获取单词列表
-            const fetchedWords = await wordLogic.getWords(token);
-            setWords(fetchedWords);
+            const dictionaryLogic = new DictionaryLogic();
+            await dictionaryLogic.addDictionary(token, newDictionaryName);
+            const fetchedDictionaries = await dictionaryLogic.getDictionaries(token);
+            setDictionaries(fetchedDictionaries);
             handleClose();
         } catch (error) {
-            console.error('Error adding word:', error);
+            console.error('Error adding dictionary:', error);
         }
     };
 
@@ -141,9 +123,7 @@ export default function WordList() {
 
     const handleClose = () => {
         setOpen(false);
-        setNewWord('');
-        setNewTranslation('');
-        setNewExampleSentence('');
+        setNewDictionaryName('');
     };
 
     return (
@@ -178,7 +158,7 @@ export default function WordList() {
                             id="tableTitle"
                             component="div"
                         >
-                            Words
+                            Dictionaries
                         </Typography>
                     )}
 
@@ -189,7 +169,7 @@ export default function WordList() {
                             </IconButton>
                         </Tooltip>
                     ) : (
-                        <Tooltip title="Add Word">
+                        <Tooltip title="Add Dictionary">
                             <IconButton onClick={handleClickOpen}>
                                 <AddIcon />
                             </IconButton>
@@ -207,12 +187,12 @@ export default function WordList() {
                                     <Checkbox
                                         color="primary"
                                         indeterminate={
-                                            selected.length > 0 && selected.length < words.length
+                                            selected.length > 0 && selected.length < dictionaries.length
                                         }
-                                        checked={words.length > 0 && selected.length === words.length}
+                                        checked={dictionaries.length > 0 && selected.length === dictionaries.length}
                                         onChange={null}
                                         inputProps={{
-                                            'aria-label': 'select all words',
+                                            'aria-label': 'select all dictionaries',
                                         }}
                                     />
                                 </TableCell>
@@ -242,7 +222,7 @@ export default function WordList() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {words
+                            {dictionaries
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     const isItemSelected = isSelected(row.id);
@@ -269,20 +249,27 @@ export default function WordList() {
                                                 />
                                             </TableCell>
                                             <TableCell component="th" id={labelId} scope="row">
-                                                {row.word}
+                                                {row.name}
                                             </TableCell>
-                                            <TableCell>{row.translation}</TableCell>
-                                            <TableCell>{row.exampleSentence}</TableCell>
                                         </TableRow>
                                     );
                                 })}
+                            {emptyRows > 0 && (
+                                <TableRow
+                                    style={{
+                                        height: 53 * emptyRows,
+                                    }}
+                                >
+                                    <TableCell colSpan={6} />
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={words.length}
+                    count={dictionaries.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -290,37 +277,21 @@ export default function WordList() {
                 />
             </Paper>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Add New Word</DialogTitle>
+                <DialogTitle>Add New Dictionary</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
                         margin="dense"
-                        id="word"
-                        label="Word"
+                        id="name"
+                        label="Dictionary Name"
                         fullWidth
-                        value={newWord}
-                        onChange={(e) => setNewWord(e.target.value)}
-                    />
-                    <TextField
-                        margin="dense"
-                        id="translation"
-                        label="Translation"
-                        fullWidth
-                        value={newTranslation}
-                        onChange={(e) => setNewTranslation(e.target.value)}
-                    />
-                    <TextField
-                        margin="dense"
-                        id="example-sentence"
-                        label="Example Sentence"
-                        fullWidth
-                        value={newExampleSentence}
-                        onChange={(e) => setNewExampleSentence(e.target.value)}
+                        value={newDictionaryName}
+                        onChange={(e) => setNewDictionaryName(e.target.value)}
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAddWord}>Add</Button>
+                    <Button onClick={handleAddDictionary}>Add</Button>
                 </DialogActions>
             </Dialog>
         </Box>
