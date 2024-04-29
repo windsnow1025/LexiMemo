@@ -33,10 +33,10 @@ class DictionaryService(
         return dictionaryRepository.save(dictionary)
     }
 
-    fun addWordToDictionary(token: String, wordId: Int, dictionaryId: Int) {
+    fun addWordToDictionary(token: String, wordId: Int, dictionaryId: Int): Dictionary? {
         val username = parseUsernameFromToken(token)
         if (userRepository.findByUsername(username)?.type != "admin") {
-            return
+            return null
         }
 
         val word = wordRepository.findById(wordId).orElse(null)
@@ -44,7 +44,7 @@ class DictionaryService(
 
         dictionary.words.add(word)
 
-        dictionaryRepository.save(dictionary)
+        return dictionaryRepository.save(dictionary)
     }
 
     fun deleteWord(token: String, dictionaryId: Int, wordId: Int) {

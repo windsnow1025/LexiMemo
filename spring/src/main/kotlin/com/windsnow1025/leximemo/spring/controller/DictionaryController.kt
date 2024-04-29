@@ -53,8 +53,11 @@ class DictionaryController(val dictionaryService: DictionaryService) {
         @PathVariable("wordId") wordId: Int
     ): ResponseEntity<Any> {
         try {
-            dictionaryService.addWordToDictionary(token, wordId, dictionaryId)
-            return ResponseEntity.ok().build()
+            return if (dictionaryService.addWordToDictionary(token, wordId, dictionaryId) !== null) {
+                ResponseEntity.ok().build()
+            } else {
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+            }
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
