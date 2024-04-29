@@ -38,5 +38,3 @@ CREATE TABLE IF NOT EXISTS dictionary_word
     word_id       INT,
     PRIMARY KEY (dictionary_id, word_id)
 );
-
-
