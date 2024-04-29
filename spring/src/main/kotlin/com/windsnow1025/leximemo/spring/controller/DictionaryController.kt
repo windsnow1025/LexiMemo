@@ -61,4 +61,13 @@ class DictionaryController(val dictionaryService: DictionaryService) {
         }
     }
 
+//    @DeleteMapping("/dictionary/{dictionaryId}/word/{wordId}")
+//    fun deleteDictionaryWord(
+//        @RequestHeader("Authorization") token: String,
+//        @PathVariable("dictionaryId") dictionaryId: Int,
+//        @PathVariable("wordId") wordId: Int
+//    ): ResponseEntity<Any>{
+//
+//    }
+
 }

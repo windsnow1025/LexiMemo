@@ -48,4 +48,8 @@ class DictionaryService(
         dictionaryRepository.save(dictionary)
         wordRepository.save(word)
     }
+
+    fun deleteWord(token: String, dictionaryId: Int, wordId: Int) {
+
+    }
 }
