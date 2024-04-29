@@ -43,10 +43,8 @@ class DictionaryService(
         val dictionary = dictionaryRepository.findById(dictionaryId).orElse(null)
 
         dictionary.words.add(word)
-        word.dictionaries.add(dictionary)
 
         dictionaryRepository.save(dictionary)
-        wordRepository.save(word)
     }
 
     fun deleteWord(token: String, dictionaryId: Int, wordId: Int) {

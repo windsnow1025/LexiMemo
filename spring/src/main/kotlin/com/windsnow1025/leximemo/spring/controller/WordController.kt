@@ -4,6 +4,7 @@ import com.windsnow1025.leximemo.spring.entity.Word
 import com.windsnow1025.leximemo.spring.service.WordService
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.SignatureException
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -69,6 +70,8 @@ class WordController(val service: WordService) {
             } else {
                 ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
             }
+        } catch (e: DataIntegrityViolationException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         } catch (e: SignatureException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: MalformedJwtException) {
