@@ -164,3 +164,15 @@ Authorization: {{token}}
 POST {{baseUrl}}/dictionary/1/word/10
 Authorization: {{token}}
 Content-Type: application/json
+
+### Post link User Word
+
+POST {{baseUrl}}/user/user-word
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "wordId": 1,
+  "weights": "[0.5, 0.8, 0.9]",
+  "day": "2024-12-12"
+}

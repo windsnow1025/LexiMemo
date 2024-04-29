@@ -58,7 +58,7 @@ Authorization: {{token}}
 GET {{baseUrl}}/user/user-word
 Authorization: {{token}}
 
-### Post User Word
+### Post link User Word
 
 POST {{baseUrl}}/user/user-word
 Content-Type: application/json
