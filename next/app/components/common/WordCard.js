@@ -5,6 +5,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { sendPostRequestAndPlayWav } from '../../../src/service/AudioService';
 
 const bull = (
     <Box
@@ -15,7 +17,12 @@ const bull = (
     </Box>
 );
 
-export default function WordCard() {
+const WordCard = () => {
+    const handlePlayAudio = () => {
+        const text = 'test'; // 填入需要发音的文本
+        sendPostRequestAndPlayWav(text);
+    };
+
     return (
         <Card sx={{ maxWidth: 500 }}>
             <CardContent>
@@ -23,15 +30,22 @@ export default function WordCard() {
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         Word of the Day
                     </Typography>
-                    <Typography variant="h5" component="div">
-                        be{bull}nev{bull}o{bull}lent
+                    <Typography variant="h5" component="div" >
+                        test
                     </Typography>
+
                 </Box>
             </CardContent>
             <CardActions sx={{ justifyContent: 'center' }}>
-                <Button size="small">认识</Button>
-                <Button size="small">不认识</Button>
+                <Button size="small" variant="contained">认识</Button>
+                <Button size="small" >模糊</Button>
+                <Button size="small" variant="contained">不认识</Button>
             </CardActions>
+            <Button size="small" onClick={handlePlayAudio} sx={{ justifyContent: 'center' }}>
+                <PlayArrowIcon />
+            </Button>
         </Card>
     );
-}
+};
+
+export default WordCard;

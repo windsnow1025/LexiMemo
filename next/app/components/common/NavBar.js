@@ -20,7 +20,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import AutocompleteAdmin from './AutocompleteAdmin';
-import UserService from '../../../src/service/UserService';
+import {UserLogic} from '../../../src/logic/UserLogic';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -78,7 +78,7 @@ export default function PrimarySearchAppBar() {
     const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
     const [isRegisterDialogOpen, setIsRegisterDialogOpen] = useState(false);
 
-    const userService = new UserService();
+    const userLogic = new UserLogic();
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -111,7 +111,7 @@ export default function PrimarySearchAppBar() {
     const handleLogin = async () => {
         // Perform login action using UserService
         try {
-            await userService.signIn(username, password);
+            await userLogic.signIn(username, password);
             // Clear input fields after successful login
             setUsername('');
             setPassword('');
@@ -125,7 +125,7 @@ export default function PrimarySearchAppBar() {
     const handleRegister = async () => {
         // Perform register action using UserService
         try {
-            await userService.signUp(username, password);
+            await userLogic.signUp(username, password);
             // Clear input fields after successful registration
             setUsername('');
             setPassword('');
