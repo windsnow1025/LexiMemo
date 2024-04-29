@@ -18,13 +18,13 @@ export default function AutocompleteAdmin() {
                     path += '';
                     break;
                 case '用户管理':
-                    path += 'UserManagement';
+                    path += 'user';
                     break;
                 case '单词管理':
-                    path += 'WordManagement';
+                    path += 'word';
                     break;
                 case '词书管理':
-                    path += 'DictionaryManagement';
+                    path += 'dictionary';
                     break;
                 default:
                     break;
