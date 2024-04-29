@@ -1,3 +1,34 @@
+### Post Sign Up (Normal)
+
+POST {{baseUrl}}/user/sign-up
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}
+
+### Post Sign Up (Admin)
+
+POST {{baseUrl}}/user/sign-up
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin",
+  "type": "admin"
+}
+
+### Post Sign In (Admin)
+
+POST {{baseUrl}}/user/sign-in
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
 ### Add words (require admin)
 POST {{baseUrl}}/words
 Authorization: {{token}}
@@ -119,3 +150,17 @@ Content-Type: application/json
     "frequency": 2
   }
 ]
+
+### Post dictionary
+POST {{baseUrl}}/dictionary
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "考研词书1"
+}
+
+### Post link word to dictionary
+POST {{baseUrl}}/dictionary/1/word/10
+Authorization: {{token}}
+Content-Type: application/json

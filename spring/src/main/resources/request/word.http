@@ -78,4 +78,3 @@ Content-Type: application/json
 POST {{baseUrl}}/word/1
 Authorization: {{token}}
 Content-Type: application/json
-
