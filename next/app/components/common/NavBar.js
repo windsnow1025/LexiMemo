@@ -20,13 +20,15 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import AutocompleteAdmin from './AutocompleteAdmin';
-import {UserLogic} from '../../../src/logic/UserLogic';
+import { UserLogic } from '../../../src/logic/UserLogic';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
-import {Button} from "@mui/material";
+import { Button } from "@mui/material";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const drawerWidth = 240;
 
@@ -77,6 +79,10 @@ export default function PrimarySearchAppBar() {
     const [password, setPassword] = useState('');
     const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
     const [isRegisterDialogOpen, setIsRegisterDialogOpen] = useState(false);
+    const [loggedInUsername, setLoggedInUsername] = useState(null);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
     const userLogic = new UserLogic();
 
@@ -109,31 +115,43 @@ export default function PrimarySearchAppBar() {
     };
 
     const handleLogin = async () => {
-        // Perform login action using UserService
         try {
             await userLogic.signIn(username, password);
-            // Clear input fields after successful login
+            setLoggedInUsername(username);
             setUsername('');
             setPassword('');
-            // Close the login dialog
             setIsLoginDialogOpen(false);
+            setSnackbarSeverity('success');
+            setSnackbarMessage('登录成功');
+            setSnackbarOpen(true);
         } catch (error) {
             console.error('Login failed:', error);
+            setSnackbarSeverity('error');
+            setSnackbarMessage('登录失败，请检查用户名和密码');
+            setSnackbarOpen(true);
         }
     };
 
     const handleRegister = async () => {
-        // Perform register action using UserService
         try {
             await userLogic.signUp(username, password);
-            // Clear input fields after successful registration
+            setLoggedInUsername(username);
             setUsername('');
             setPassword('');
-            // Close the register dialog
             setIsRegisterDialogOpen(false);
+            setSnackbarSeverity('success');
+            setSnackbarMessage('注册成功');
+            setSnackbarOpen(true);
         } catch (error) {
             console.error('Registration failed:', error);
+            setSnackbarSeverity('error');
+            setSnackbarMessage('注册失败，请重试');
+            setSnackbarOpen(true);
         }
+    };
+
+    const closeSnackbar = () => {
+        setSnackbarOpen(false);
     };
 
     const menuId = 'primary-search-account-menu';
@@ -153,8 +171,16 @@ export default function PrimarySearchAppBar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={() => setIsLoginDialogOpen(true)}>登录</MenuItem>
-            <MenuItem onClick={() => setIsRegisterDialogOpen(true)}>注册</MenuItem>
+            {loggedInUsername ? (
+                <MenuItem>
+                    <Typography>{loggedInUsername}</Typography>
+                </MenuItem>
+            ) : (
+                <>
+                    <MenuItem onClick={() => setIsLoginDialogOpen(true)}>登录</MenuItem>
+                    <MenuItem onClick={() => setIsRegisterDialogOpen(true)}>注册</MenuItem>
+                </>
+            )}
         </Menu>
     );
 
@@ -354,6 +380,13 @@ export default function PrimarySearchAppBar() {
                     <Button onClick={handleRegister}>注册</Button>
                 </DialogActions>
             </Dialog>
+
+            {/* Snackbar for notifications */}
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={closeSnackbar}>
+                <MuiAlert elevation={6} variant="filled" onClose={closeSnackbar} severity={snackbarSeverity}>
+                    {snackbarMessage}
+                </MuiAlert>
+            </Snackbar>
         </Box>
     );
 }
