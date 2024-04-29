@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useRouter } from 'next/router'; // 导入 useRouter 钩子
+import { useRouter } from 'next/router';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import SearchIcon from '@mui/icons-material/Search';
@@ -7,7 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 const filter = createFilterOptions();
 
 export default function AutocompleteAdmin() {
-    const router = useRouter(); // 使用 useRouter 钩子获取 router 对象
+    const router = useRouter();
     const [value, setValue] = React.useState(null);
 
     const handleSelection = (event, newValue) => {
@@ -18,13 +18,13 @@ export default function AutocompleteAdmin() {
                     path += '';
                     break;
                 case '用户管理':
-                    path += 'UserManagement';
+                    path += 'user';
                     break;
                 case '单词管理':
-                    path += 'WordManagement';
+                    path += 'word';
                     break;
                 case '词书管理':
-                    path += 'WordBankManagement';
+                    path += 'dictionary';
                     break;
                 default:
                     break;
