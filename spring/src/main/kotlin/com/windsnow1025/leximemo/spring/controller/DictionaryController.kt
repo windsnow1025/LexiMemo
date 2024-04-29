@@ -46,23 +46,18 @@ class DictionaryController(val dictionaryService: DictionaryService) {
         }
     }
 
-    @PostMapping("/dictionary/add")
+    @PostMapping("/dictionary/{dictionaryId}/word/{wordId}")
     fun addDictionaryWord(
         @RequestHeader("Authorization") token: String,
-        @RequestBody request: Map<String, String>
-    ): ResponseEntity<Any>{
-        val wordName = request["wordName"]
-        val dictionaryName = request["dictionaryName"]
+        @PathVariable("dictionaryId") dictionaryId: Int,
+        @PathVariable("wordId") wordId: Int
+    ): ResponseEntity<Any> {
         try {
-            if (wordName != null && dictionaryName != null) {
-                dictionaryService.addWordToDictionary(token, wordName, dictionaryName)
-                return ResponseEntity.ok().build()
-            } else{
-                return ResponseEntity(HttpStatus.BAD_REQUEST)
-            }
+            dictionaryService.addWordToDictionary(token, wordId, dictionaryId)
+            return ResponseEntity.ok().build()
         } catch (e: Exception) {
             println(e)
-            return ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }
     }
 

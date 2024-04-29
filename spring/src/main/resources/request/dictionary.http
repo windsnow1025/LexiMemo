@@ -15,12 +15,7 @@ Authorization: {{token}}
 GET {{baseUrl}}/dictionary/1
 Authorization: {{token}}
 
-### Post word to dictionary
-POST {{baseUrl}}/dictionary/add
+### Post link word to dictionary
+POST {{baseUrl}}/dictionary/1/word/10
 Authorization: {{token}}
 Content-Type: application/json
-
-{
- "wordName": "able",
- "dictionaryName": "考研词书1"
-}

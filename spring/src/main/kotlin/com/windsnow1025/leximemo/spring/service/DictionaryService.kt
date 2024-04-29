@@ -33,14 +33,14 @@ class DictionaryService(
         return dictionaryRepository.save(dictionary)
     }
 
-    fun addWordToDictionary(token: String, wordName: String, dictionaryName: String) {
-        // 保护机制，管理员添加还是多数人都选择添加之后，进行添加？
-        parseUsernameFromToken(token)
-        val word = wordRepository.findByWord(wordName)
-            ?: throw IllegalArgumentException("Word not found: $wordName")
+    fun addWordToDictionary(token: String, wordId: Int, dictionaryId: Int) {
+        val username = parseUsernameFromToken(token)
+        if (userRepository.findByUsername(username)?.type != "admin") {
+            return
+        }
 
-        val dictionary = dictionaryRepository.findByName(dictionaryName)
-            ?: throw IllegalArgumentException("Dictionary not found: $dictionaryName")
+        val word = wordRepository.findById(wordId).orElse(null)
+        val dictionary = dictionaryRepository.findById(dictionaryId).orElse(null)
 
         dictionary.words.add(word)
         word.dictionaries.add(dictionary)

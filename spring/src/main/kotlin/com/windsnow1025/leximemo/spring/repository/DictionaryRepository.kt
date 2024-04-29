@@ -8,5 +8,4 @@ import java.util.*
 
 @Repository
 interface DictionaryRepository : JpaRepository<Dictionary, Int> {
-    fun findByName(name:String): Dictionary?
 }
