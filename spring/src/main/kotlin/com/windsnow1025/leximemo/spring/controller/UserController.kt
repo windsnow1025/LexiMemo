@@ -70,7 +70,7 @@ class UserController(val service: UserService) {
     }
 
     @GetMapping("/user/user-word")
-    fun addWordToUser(@RequestHeader("Authorization") token: String): ResponseEntity<List<UserWord>> {
+    fun getWordsFromUser(@RequestHeader("Authorization") token: String): ResponseEntity<List<UserWord>> {
         try {
             val userWord = service.getUserWords(token)
             return ResponseEntity.ok(userWord)
@@ -87,7 +87,7 @@ class UserController(val service: UserService) {
     }
 
     @PostMapping("/user/user-word")
-    fun addWordToUser(@RequestHeader("Authorization") token: String, @RequestBody userWord: UserWord): ResponseEntity<Void> {
+    fun addWordsToUser(@RequestHeader("Authorization") token: String, @RequestBody userWord: UserWord): ResponseEntity<Void> {
         try {
             service.addWordToUser(token, userWord)
             return ResponseEntity.ok().build()
