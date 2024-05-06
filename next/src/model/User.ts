@@ -1,4 +1,4 @@
-import {UserWord} from "@/model/UserWord";
+import {UserWord} from "../model/UserWord";
 
 export class User {
   id?: number;

@@ -1,5 +1,5 @@
 import WordService from "../service/WordService";
-import {Word} from "@/model/Word";
+import {Word} from "../model/Word";
 
 export class WordLogic {
     private wordService: WordService;

@@ -1,5 +1,5 @@
-import {User} from "@/model/User";
-import {Word} from "@/model/Word";
+import {User} from "../model/User";
+import {Word} from "../model/Word";
 
 export class UserWord {
   userId?: number;

@@ -1,4 +1,4 @@
-import {Word} from "@/model/Word";
+import {Word} from "../model/Word";
 
 export class Dictionary {
   id?: number;

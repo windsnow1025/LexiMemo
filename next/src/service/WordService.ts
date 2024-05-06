@@ -1,5 +1,5 @@
 import axios, {AxiosInstance} from 'axios';
-import {Word} from "@/model/Word";
+import {Word} from "../model/Word";
 
 export default class WordService {
     private axiosInstance: AxiosInstance;

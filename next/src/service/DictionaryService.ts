@@ -1,6 +1,6 @@
 import axios, {AxiosInstance} from 'axios';
-import {Dictionary} from "@/model/Dictionary";
-import {Word} from "@/model/Word";
+import {Dictionary} from "../model/Dictionary";
+import {Word} from "../model/Word";
 
 export default class DictionaryService {
     private axiosInstance: AxiosInstance;
