@@ -3,6 +3,7 @@ package com.windsnow1025.leximemo.spring.controller
 import com.windsnow1025.leximemo.spring.entity.User
 import com.windsnow1025.leximemo.spring.entity.UserWord
 import com.windsnow1025.leximemo.spring.service.UserService
+import com.windsnow1025.leximemo.spring.service.UserWordService
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.SignatureException
 import org.springframework.dao.DataIntegrityViolationException
@@ -11,7 +12,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-class UserController(val service: UserService) {
+class UserController(val service: UserService,
+                     val userWordService: UserWordService
+) {
     @GetMapping("/user")
     fun getUser(@RequestHeader("Authorization") token: String): ResponseEntity<User> {
         try {
@@ -97,6 +100,20 @@ class UserController(val service: UserService) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: DataIntegrityViolationException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build()
+        } catch (e: Exception) {
+            println(e)
+            return ResponseEntity.internalServerError().build()
+        }
+    }
+
+    @DeleteMapping("/user/{id}")
+    fun deleteUserWord(@RequestHeader("Authorization") token: String, @PathVariable("id") id: Int): ResponseEntity<Void> {
+        try {
+            if (userWordService.deleteUserWordByWordId(token, id)){
+                return ResponseEntity.ok().build()
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+            }
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()

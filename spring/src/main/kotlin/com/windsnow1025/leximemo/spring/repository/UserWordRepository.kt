@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserWordRepository : JpaRepository<UserWord, UserWordId> {
     fun findByUserId(userId: Int): List<UserWord>
+    fun findByUserIdAndWordId(userId: Int, wordId: Int): UserWord
 }
