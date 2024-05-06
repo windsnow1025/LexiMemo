@@ -1,14 +1,17 @@
-import axios from 'axios';
+import axios, {AxiosInstance} from 'axios';
+import {Word} from "@/model/Word";
 
 export default class WordService {
+    private axiosInstance: AxiosInstance;
+
     constructor() {
-        this.axiosInstance = axios.create({ baseURL: process.env.NEXT_PUBLIC_NODE_API_BASE_URL });
+        this.axiosInstance = axios.create({baseURL: process.env.NEXT_PUBLIC_NODE_API_BASE_URL});
     }
 
-    async getWords(token) {
+    async getWords(token: string): Promise<Word[]> {
         try {
             const res = await this.axiosInstance.get("/words", {
-                headers: { Authorization: token }
+                headers: {Authorization: token}
             });
             return res.data;
         } catch (error) {
@@ -17,11 +20,11 @@ export default class WordService {
         }
     }
 
-    async getWordByName(token, word) {
+    async getWordByName(token: string, word: string): Promise<Word> {
         try {
             const res = await this.axiosInstance.get("/word", {
-                params: { word },
-                headers: { Authorization: token }
+                params: {word},
+                headers: {Authorization: token}
             });
             return res.data;
         } catch (error) {
@@ -30,10 +33,10 @@ export default class WordService {
         }
     }
 
-    async getWordById(token, id) {
+    async getWordById(token: string, id: number) {
         try {
             const res = await this.axiosInstance.get(`/word/${id}`, {
-                headers: { Authorization: token }
+                headers: {Authorization: token}
             });
             return res.data;
         } catch (error) {
@@ -42,7 +45,7 @@ export default class WordService {
         }
     }
 
-    async addWord(token, word, translation, exampleSentence, frequency) {
+    async addWord(token: string, word: string, translation: string, exampleSentence: string, frequency: number) {
         try {
             const res = await this.axiosInstance.post("/word", {
                 word,
@@ -50,7 +53,7 @@ export default class WordService {
                 exampleSentence,
                 frequency
             }, {
-                headers: { Authorization: token }
+                headers: {Authorization: token}
             });
             return res.data;
         } catch (error) {
