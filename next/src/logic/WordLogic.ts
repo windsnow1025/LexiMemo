@@ -1,11 +1,14 @@
 import WordService from "../service/WordService";
+import {Word} from "@/model/Word";
 
 export class WordLogic {
+    private wordService: WordService;
+
     constructor() {
         this.wordService = new WordService();
     }
 
-    async getWords(token) {
+    async getWords(token: string): Promise<Word[]> {
         try {
             return await this.wordService.getWords(token);
         } catch (err) {
@@ -14,7 +17,7 @@ export class WordLogic {
         }
     }
 
-    async getWordByName(token, word) {
+    async getWordByName(token: string, word: string): Promise<Word> {
         try {
             return await this.wordService.getWordByName(token, word);
         } catch (err) {
@@ -23,7 +26,7 @@ export class WordLogic {
         }
     }
 
-    async getWordById(token, id) {
+    async getWordById(token: string, id: number): Promise<Word> {
         try {
             return await this.wordService.getWordById(token, id);
         } catch (err) {
@@ -32,10 +35,10 @@ export class WordLogic {
         }
     }
 
-    async addWord(token, word, translation, exampleSentence, frequency) {
+    async addWord(token: string, word: string, translation: string, exampleSentence: string, frequency: number) {
         try {
             await this.wordService.addWord(token, word, translation, exampleSentence, frequency);
-        } catch (err) {
+        } catch (err: any) {
             // Handle specific error based on the thrown error message
             if (err.message === "Insufficient permission to add word") {
                 throw new Error("You do not have permission to add words.");
