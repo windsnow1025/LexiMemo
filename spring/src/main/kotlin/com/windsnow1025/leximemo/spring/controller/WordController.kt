@@ -46,8 +46,8 @@ class WordController(val service: WordService) {
 
     @GetMapping("/word/{id}")
     fun getWord(
-            @RequestHeader("Authorization") token: String,
-            @PathVariable("id") id: Int
+        @RequestHeader("Authorization") token: String,
+        @PathVariable("id") id: Int
     ): ResponseEntity<Word> {
         try {
             val word: Word? = service.getWordById(token, id).orElse(null)
@@ -91,29 +91,32 @@ class WordController(val service: WordService) {
             } else {
                 ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
             }
-        }catch (e : SignatureException){
+        } catch (e: SignatureException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        }catch (e : MalformedJwtException){
+        } catch (e: MalformedJwtException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        }catch (e : Exception){
+        } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
         }
     }
 
     @PostMapping("/word/{id}")
-    fun deleteWordById(@RequestHeader("Authorization") token: String, @PathVariable("id") id: Int): ResponseEntity<Void> {
+    fun deleteWordById(
+        @RequestHeader("Authorization") token: String,
+        @PathVariable("id") id: Int
+    ): ResponseEntity<Void> {
         try {
-            return if (service.deleteWordById(token, id)){
+            return if (service.deleteWordById(token, id)) {
                 ResponseEntity.ok().build()
-            }else{
+            } else {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
             }
-        }catch (e : SignatureException){
+        } catch (e: SignatureException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        }catch (e : MalformedJwtException){
+        } catch (e: MalformedJwtException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        }catch (e : Exception){
+        } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
         }
