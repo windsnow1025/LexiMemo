@@ -69,3 +69,8 @@ Authorization: {{token}}
   "weights": "[0.5, 0.8, 0.9]",
   "day": "2024-12-12"
 }
+
+### Delete link User Word
+
+DELETE {{baseUrl}}/user/1
+Authorization: {{token}}
