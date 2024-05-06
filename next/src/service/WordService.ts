@@ -33,7 +33,7 @@ export default class WordService {
         }
     }
 
-    async getWordById(token: string, id: number) {
+    async getWordById(token: string, id: number) :Promise<Word> {
         try {
             const res = await this.axiosInstance.get(`/word/${id}`, {
                 headers: {Authorization: token}
