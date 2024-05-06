@@ -51,7 +51,7 @@ class DictionaryController(val dictionaryService: DictionaryService) {
         @RequestHeader("Authorization") token: String,
         @PathVariable("dictionaryId") dictionaryId: Int,
         @PathVariable("wordId") wordId: Int
-    ): ResponseEntity<Any> {
+    ): ResponseEntity<Void> {
         try {
             return if (dictionaryService.addWordToDictionary(token, wordId, dictionaryId) !== null) {
                 ResponseEntity.ok().build()
@@ -69,7 +69,7 @@ class DictionaryController(val dictionaryService: DictionaryService) {
         @RequestHeader("Authorization") token: String,
         @PathVariable("dictionaryId") dictionaryId: Int,
         @PathVariable("wordId") wordId: Int
-    ): ResponseEntity<Any>{
+    ): ResponseEntity<Void>{
         try {
             return if (dictionaryService.deleteWordFromDictionary(token, wordId, dictionaryId) !== null) {
                 ResponseEntity.ok().build()

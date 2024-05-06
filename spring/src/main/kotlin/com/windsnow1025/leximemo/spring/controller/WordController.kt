@@ -63,7 +63,7 @@ class WordController(val service: WordService) {
     }
 
     @PostMapping("/word")
-    fun addWord(@RequestHeader("Authorization") token: String, @RequestBody word: Word): ResponseEntity<Any> {
+    fun addWord(@RequestHeader("Authorization") token: String, @RequestBody word: Word): ResponseEntity<Void> {
         try {
             return if (service.addWord(token, word) != null) {
                 ResponseEntity.ok().build()
@@ -83,7 +83,7 @@ class WordController(val service: WordService) {
     }
 
     @PostMapping("/words")
-    fun addWords(@RequestHeader("Authorization") token: String, @RequestBody words: List<Word>): ResponseEntity<Any> {
+    fun addWords(@RequestHeader("Authorization") token: String, @RequestBody words: List<Word>): ResponseEntity<Void> {
         try {
             val result = service.addWords(token, words)
             return if (result) {
@@ -102,7 +102,7 @@ class WordController(val service: WordService) {
     }
 
     @PostMapping("/word/{id}")
-    fun deleteWordById(@RequestHeader("Authorization") token: String, @PathVariable("id") id: Int): ResponseEntity<Any> {
+    fun deleteWordById(@RequestHeader("Authorization") token: String, @PathVariable("id") id: Int): ResponseEntity<Void> {
         try {
             return if (service.deleteWordById(token, id)){
                 ResponseEntity.ok().build()
