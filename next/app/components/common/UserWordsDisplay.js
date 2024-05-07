@@ -18,6 +18,7 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import AddIcon from '@mui/icons-material/Add';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -25,14 +26,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { visuallyHidden } from '@mui/utils';
-import { DictionaryLogic } from "../../../src/logic/DictionaryLogic.ts";
-import { useRouter } from 'next/router';
-import { WordLogic } from "../../../src/logic/WordLogic";
-
-function createData(id, word, translation, exampleSentence) {
-    return { id, word, translation, exampleSentence };
-}
+import { Alert, AlertTitle } from '@mui/material';
+import { UserLogic } from "../../../src/logic/UserLogic";
+import {visuallyHidden} from "@mui/utils";
 
 const headCells = [
     {
@@ -55,7 +51,7 @@ const headCells = [
     },
 ];
 
-export default function DictionaryDisplay() {
+export default function WordList() {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('word');
     const [selected, setSelected] = useState([]);
@@ -64,27 +60,27 @@ export default function DictionaryDisplay() {
     const [words, setWords] = useState([]);
     const [open, setOpen] = useState(false);
     const [newWord, setNewWord] = useState('');
-    const [newTranslation, setNewTranslation] = useState('');
-    const [newExampleSentence, setNewExampleSentence] = useState('');
-    const router = useRouter(); // 获取路由对象
-    const dictionaryLogic = new DictionaryLogic(); // Instantiate DictionaryLogic
-    const wordLogic = new WordLogic(); // Instantiate WordLogic
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertSeverity, setAlertSeverity] = useState('success');
 
     useEffect(() => {
+        function createData(id, word, translation, exampleSentence) {
+            return { id, word, translation, exampleSentence };
+        }
         async function fetchWords() {
             try {
                 const token = localStorage.getItem('token');
-                const { dictionaryId } = router.query; // 获取路由参数中的 dictionaryId
-                const fetchedWords = await dictionaryLogic.getDictionaryWords(token, dictionaryId); // Use dictionaryLogic
+                const userLogic = new UserLogic();
+                const userWords = await userLogic.getUserWord(token);
+                const fetchedWords = userWords.map(word => createData(word.word.id, word.word.word, word.word.translation, word.word.exampleSentence));
                 setWords(fetchedWords);
-                console.log('Fetched words:', fetchedWords)
             } catch (error) {
                 console.error('Error fetching words:', error);
             }
         }
 
         fetchWords();
-    }, [router.query]); // 监听路由参数的变化
+    }, []);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -128,28 +124,21 @@ export default function DictionaryDisplay() {
     const handleAddWord = async () => {
         try {
             const token = localStorage.getItem('token');
-            const { dictionaryId } = router.query; // 获取路由参数中的 dictionaryId
-            if (typeof dictionaryId !== 'string') {
-                return;
-            }
-            console.log(dictionaryId)
-
-            // 获取单词信息
-            const wordInfo = await wordLogic.getWordByName(token, newWord);
-            console.log('Word info:', wordInfo);
-
-            // 添加单词到字典中
-            await dictionaryLogic.addWordToDictionary(token, wordInfo.id, parseInt(dictionaryId));
-
-            // 添加单词后重新获取单词列表
-            const fetchedWords = await dictionaryLogic.getDictionaryWords(token, parseInt(dictionaryId));
+            const userLogic = new UserLogic();
+            await userLogic.linkUserHavedWord(token, newWord); // Assumes newWord is the word name, replace it with the actual word data
+            setAlertMessage('Word added successfully.');
+            setAlertSeverity('success');
+            setOpen(false);
+            setNewWord('');
+            const userWords = await userLogic.getUserWord(token);
+            const fetchedWords = userWords.map(word => createData(word.word.id, word.word.word, word.word.translation, word.word.exampleSentence));
             setWords(fetchedWords);
-            handleClose();
         } catch (error) {
             console.error('Error adding word:', error);
+            setAlertMessage('Failed to add word.');
+            setAlertSeverity('error');
         }
     };
-
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -158,8 +147,22 @@ export default function DictionaryDisplay() {
     const handleClose = () => {
         setOpen(false);
         setNewWord('');
-        setNewTranslation('');
-        setNewExampleSentence('');
+    };
+
+    const handleDeleteWord = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const userLogic = new UserLogic();
+            for (const id of selected) {
+                await userLogic.unlinkUserWord(token, id);
+            }
+            setSelected([]);
+            const userWords = await userLogic.getUserWord(token);
+            const fetchedWords = userWords.map(word => createData(word.word.id, word.word.word, word.word.translation, word.word.exampleSentence));
+            setWords(fetchedWords);
+        } catch (error) {
+            console.error('Error deleting word:', error);
+        }
     };
 
     return (
@@ -194,13 +197,13 @@ export default function DictionaryDisplay() {
                             id="tableTitle"
                             component="div"
                         >
-                            Words
+                            Your Word List
                         </Typography>
                     )}
 
                     {selected.length > 0 ? (
                         <Tooltip title="Delete">
-                            <IconButton>
+                            <IconButton onClick={handleDeleteWord}>
                                 <DeleteIcon />
                             </IconButton>
                         </Tooltip>
@@ -317,6 +320,12 @@ export default function DictionaryDisplay() {
                         value={newWord}
                         onChange={(e) => setNewWord(e.target.value)}
                     />
+                    {alertMessage && (
+                        <Alert severity={alertSeverity}>
+                            <AlertTitle>{alertSeverity === 'success' ? 'Success' : 'Error'}</AlertTitle>
+                            {alertMessage}
+                        </Alert>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>

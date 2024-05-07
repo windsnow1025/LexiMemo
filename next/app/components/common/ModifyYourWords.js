@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -18,73 +17,55 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
+import { visuallyHidden } from '@mui/utils';
+import { DictionaryLogic } from "../../../src/logic/DictionaryLogic.ts";
+import { UserLogic } from "../../../src/logic/UserLogic.ts";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import { visuallyHidden } from '@mui/utils';
-import { DictionaryLogic } from "../../../src/logic/DictionaryLogic.ts";
-import { useRouter } from 'next/router';
-import { WordLogic } from "../../../src/logic/WordLogic";
+import {Button} from "@mui/material";
 
-function createData(id, word, translation, exampleSentence) {
-    return { id, word, translation, exampleSentence };
+
+// Define a new function to create dictionary rows
+function createDictionaryRow(id, name) {
+    return { id, name };
 }
 
 const headCells = [
     {
-        id: 'word',
+        id: 'name',
         numeric: false,
         disablePadding: false,
-        label: 'Word',
-    },
-    {
-        id: 'translation',
-        numeric: false,
-        disablePadding: false,
-        label: 'Translation',
-    },
-    {
-        id: 'exampleSentence',
-        numeric: false,
-        disablePadding: false,
-        label: 'Example Sentence',
-    },
+        label: 'Name',
+    }
 ];
 
-export default function DictionaryDisplay() {
+export default function DictionaryList() {
     const [order, setOrder] = useState('asc');
-    const [orderBy, setOrderBy] = useState('word');
+    const [orderBy, setOrderBy] = useState('name');
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [words, setWords] = useState([]);
+    const [dictionaries, setDictionaries] = useState([]);
     const [open, setOpen] = useState(false);
-    const [newWord, setNewWord] = useState('');
-    const [newTranslation, setNewTranslation] = useState('');
-    const [newExampleSentence, setNewExampleSentence] = useState('');
-    const router = useRouter(); // 获取路由对象
-    const dictionaryLogic = new DictionaryLogic(); // Instantiate DictionaryLogic
-    const wordLogic = new WordLogic(); // Instantiate WordLogic
+    const [selectedDictionary, setSelectedDictionary] = useState(null);
+    const [dictionaryWords, setDictionaryWords] = useState([]);
 
     useEffect(() => {
-        async function fetchWords() {
+        async function fetchDictionaries() {
             try {
                 const token = localStorage.getItem('token');
-                const { dictionaryId } = router.query; // 获取路由参数中的 dictionaryId
-                const fetchedWords = await dictionaryLogic.getDictionaryWords(token, dictionaryId); // Use dictionaryLogic
-                setWords(fetchedWords);
-                console.log('Fetched words:', fetchedWords)
+                const dictionaryLogic = new DictionaryLogic();
+                const fetchedDictionaries = await dictionaryLogic.getDictionaries(token);
+                setDictionaries(fetchedDictionaries);
             } catch (error) {
-                console.error('Error fetching words:', error);
+                console.error('Error fetching dictionaries:', error);
             }
         }
 
-        fetchWords();
-    }, [router.query]); // 监听路由参数的变化
+        fetchDictionaries();
+    }, []);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -123,43 +104,39 @@ export default function DictionaryDisplay() {
     const isSelected = (id) => selected.indexOf(id) !== -1;
 
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - words.length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dictionaries.length) : 0;
 
-    const handleAddWord = async () => {
+    const handleDictionaryClick = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            const { dictionaryId } = router.query; // 获取路由参数中的 dictionaryId
-            if (typeof dictionaryId !== 'string') {
-                return;
-            }
-            console.log(dictionaryId)
-
-            // 获取单词信息
-            const wordInfo = await wordLogic.getWordByName(token, newWord);
-            console.log('Word info:', wordInfo);
-
-            // 添加单词到字典中
-            await dictionaryLogic.addWordToDictionary(token, wordInfo.id, parseInt(dictionaryId));
-
-            // 添加单词后重新获取单词列表
-            const fetchedWords = await dictionaryLogic.getDictionaryWords(token, parseInt(dictionaryId));
-            setWords(fetchedWords);
-            handleClose();
+            const dictionaryLogic = new DictionaryLogic();
+            const words = await dictionaryLogic.getDictionaryWords(token, id);
+            setDictionaryWords(words);
+            setOpen(true);
+            setSelectedDictionary(id);
         } catch (error) {
-            console.error('Error adding word:', error);
+            console.error('Error fetching dictionary words:', error);
         }
-    };
-
-
-    const handleClickOpen = () => {
-        setOpen(true);
     };
 
     const handleClose = () => {
         setOpen(false);
-        setNewWord('');
-        setNewTranslation('');
-        setNewExampleSentence('');
+        setSelectedDictionary(null);
+        setDictionaryWords([]);
+    };
+
+    const linkAllWordsToUser = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const userLogic = new UserLogic();
+            for (const word of dictionaryWords) {
+                await userLogic.linkUserNewWord(token, word.id);
+            }
+            // Optionally, you can close the dialog here
+            // setOpen(false);
+        } catch (error) {
+            console.error('Error linking all words to user:', error);
+        }
     };
 
     return (
@@ -194,22 +171,8 @@ export default function DictionaryDisplay() {
                             id="tableTitle"
                             component="div"
                         >
-                            Words
+                            选择一本词书添加进入您的词库
                         </Typography>
-                    )}
-
-                    {selected.length > 0 ? (
-                        <Tooltip title="Delete">
-                            <IconButton>
-                                <DeleteIcon />
-                            </IconButton>
-                        </Tooltip>
-                    ) : (
-                        <Tooltip title="Add Word">
-                            <IconButton onClick={handleClickOpen}>
-                                <AddIcon />
-                            </IconButton>
-                        </Tooltip>
                     )}
                 </Toolbar>
                 <TableContainer>
@@ -223,12 +186,12 @@ export default function DictionaryDisplay() {
                                     <Checkbox
                                         color="primary"
                                         indeterminate={
-                                            selected.length > 0 && selected.length < words.length
+                                            selected.length > 0 && selected.length < dictionaries.length
                                         }
-                                        checked={words.length > 0 && selected.length === words.length}
+                                        checked={dictionaries.length > 0 && selected.length === dictionaries.length}
                                         onChange={null}
                                         inputProps={{
-                                            'aria-label': 'select all words',
+                                            'aria-label': 'select all dictionaries',
                                         }}
                                     />
                                 </TableCell>
@@ -258,7 +221,7 @@ export default function DictionaryDisplay() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {words
+                            {dictionaries
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     const isItemSelected = isSelected(row.id);
@@ -267,7 +230,7 @@ export default function DictionaryDisplay() {
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.id)}
+                                            onClick={() => handleDictionaryClick(row.id)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -285,10 +248,8 @@ export default function DictionaryDisplay() {
                                                 />
                                             </TableCell>
                                             <TableCell component="th" id={labelId} scope="row">
-                                                {row.word}
+                                                {row.name}
                                             </TableCell>
-                                            <TableCell>{row.translation}</TableCell>
-                                            <TableCell>{row.exampleSentence}</TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -298,29 +259,43 @@ export default function DictionaryDisplay() {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={words.length}
+                    count={dictionaries.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
+            {/* Dialog to display dictionary words */}
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Add New Word</DialogTitle>
+                <DialogTitle>Dictionary Words</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="word"
-                        label="Word"
-                        fullWidth
-                        value={newWord}
-                        onChange={(e) => setNewWord(e.target.value)}
-                    />
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>Word</TableCell>
+                                    <TableCell>Translation</TableCell>
+                                    <TableCell>Example Sentence</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {dictionaryWords.map((word) => (
+                                    <TableRow key={word.id}>
+                                        <TableCell>{word.id}</TableCell>
+                                        <TableCell>{word.word}</TableCell>
+                                        <TableCell>{word.translation}</TableCell>
+                                        <TableCell>{word.exampleSentence}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAddWord}>Add</Button>
+                    <Button onClick={linkAllWordsToUser}>Link All Words</Button>
+                    <Button onClick={handleClose}>Close</Button>
                 </DialogActions>
             </Dialog>
         </Box>
