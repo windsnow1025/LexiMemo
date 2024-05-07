@@ -44,9 +44,9 @@ export default class DictionaryService {
         }
     }
 
-    async addWordToDictionary(token: string, wordName: string, dictionaryName: string) {
+    async addWordToDictionary(token: string, wordId: number, dictionaryId: number) {
         try {
-            const response = await this.axiosInstance.post('/dictionary/add', { wordName, dictionaryName }, {
+            const response = await this.axiosInstance.post(`/dictionary/${dictionaryId}/word/${wordId}`,  {
                 headers: { Authorization: token, 'Content-Type': 'application/json' }
             });
             return response.data;

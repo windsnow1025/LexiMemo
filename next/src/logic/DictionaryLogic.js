@@ -32,9 +32,9 @@ export class DictionaryLogic {
         }
     }
 
-    async addWordToDictionary(token, wordName, dictionaryName) {
+    async addWordToDictionary(token, wordId, dictionaryId) {
         try {
-            return await this.dictionaryService.addWordToDictionary(token, wordName, dictionaryName);
+            return await this.dictionaryService.addWordToDictionary(token, wordId, dictionaryId);
         } catch (error) {
             console.error(error);
             throw new Error('Failed to add word to dictionary.');
