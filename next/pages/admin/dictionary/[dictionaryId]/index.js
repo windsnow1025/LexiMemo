@@ -1,14 +1,14 @@
 import React from 'react';
-import NavBar from '../../../app/components/common/NavBar';
-import {CssBaseline} from "@mui/material";
-import {ThemeProvider} from "@mui/material/styles";
-import {useTheme} from "../../../app/hooks/useTheme";
+import NavBar from '../../../../app/components/common/NavBar';
+import { CssBaseline } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+import { useTheme } from "../../../../app/hooks/useTheme";
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import * as PropTypes from "prop-types";
-import DictionaryList from '../../../app/components/common/DictionaryList';
+import DictionaryDisplay from '../../../../app/components/common/DictionaryDisplay';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -18,7 +18,7 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-Item.propTypes = {children: PropTypes.node};
+Item.propTypes = { children: PropTypes.node };
 
 function Index(props) {
     const theme = useTheme();
@@ -26,8 +26,8 @@ function Index(props) {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline enableColorScheme />
-            <NavBar/>
-            <DictionaryList/>
+            <NavBar />
+            <DictionaryDisplay />
         </ThemeProvider>
     );
 }

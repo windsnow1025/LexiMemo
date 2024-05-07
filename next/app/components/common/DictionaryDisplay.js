@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -25,49 +26,63 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { visuallyHidden } from '@mui/utils';
-import { useRouter } from 'next/router'; // 导入 useRouter
+import { DictionaryLogic } from "../../../src/logic/DictionaryLogic"; // Change import
+import { useRouter } from 'next/router';
 
-import { DictionaryLogic } from '../../../src/logic/DictionaryLogic';
-
-function createData(id, name) {
-    return { id, name };
+function createData(id, word, translation, exampleSentence) {
+    return { id, word, translation, exampleSentence };
 }
 
 const headCells = [
     {
-        id: 'name',
+        id: 'word',
         numeric: false,
         disablePadding: false,
-        label: 'Dictionary Name',
+        label: 'Word',
+    },
+    {
+        id: 'translation',
+        numeric: false,
+        disablePadding: false,
+        label: 'Translation',
+    },
+    {
+        id: 'exampleSentence',
+        numeric: false,
+        disablePadding: false,
+        label: 'Example Sentence',
     },
 ];
 
-export default function DictionaryList() {
+export default function DictionaryDisplay() {
     const [order, setOrder] = useState('asc');
-    const [orderBy, setOrderBy] = useState('name');
+    const [orderBy, setOrderBy] = useState('word');
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [dictionaries, setDictionaries] = useState([]);
+    const [words, setWords] = useState([]);
     const [open, setOpen] = useState(false);
-    const [newDictionaryName, setNewDictionaryName] = useState('');
-
-    const router = useRouter(); // 使用 useRouter 获取路由对象
+    const [newWord, setNewWord] = useState('');
+    const [newTranslation, setNewTranslation] = useState('');
+    const [newExampleSentence, setNewExampleSentence] = useState('');
+    const router = useRouter(); // 获取路由对象
+    const dictionaryLogic = new DictionaryLogic(); // Instantiate DictionaryLogic
 
     useEffect(() => {
-        async function fetchDictionaries() {
+        async function fetchWords() {
             try {
                 const token = localStorage.getItem('token');
-                const dictionaryLogic = new DictionaryLogic();
-                const fetchedDictionaries = await dictionaryLogic.getDictionaries(token);
-                setDictionaries(fetchedDictionaries);
+                const { dictionaryId } = router.query; // 获取路由参数中的 dictionaryId
+                const fetchedWords = await dictionaryLogic.getDictionaryWords(token, dictionaryId); // Use dictionaryLogic
+                setWords(fetchedWords);
+                console.log('Fetched words:', fetchedWords)
             } catch (error) {
-                console.error('Error fetching dictionaries:', error);
+                console.error('Error fetching words:', error);
             }
         }
 
-        fetchDictionaries();
-    }, []);
+        fetchWords();
+    }, [router.query]); // 监听路由参数的变化
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -106,18 +121,19 @@ export default function DictionaryList() {
     const isSelected = (id) => selected.indexOf(id) !== -1;
 
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dictionaries.length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - words.length) : 0;
 
-    const handleAddDictionary = async () => {
+    const handleAddWord = async () => {
         try {
             const token = localStorage.getItem('token');
-            const dictionaryLogic = new DictionaryLogic();
-            await dictionaryLogic.addDictionary(token, newDictionaryName);
-            const fetchedDictionaries = await dictionaryLogic.getDictionaries(token);
-            setDictionaries(fetchedDictionaries);
+            const { dictionaryId } = router.query; // 获取路由参数中的 dictionaryId
+            await dictionaryLogic.addWordToDictionary(token, newWord, dictionaryId); // Use dictionaryLogic
+            // 添加单词后重新获取单词列表
+            const fetchedWords = await dictionaryLogic.getDictionaryWords(token, dictionaryId); // Use dictionaryLogic
+            setWords(fetchedWords);
             handleClose();
         } catch (error) {
-            console.error('Error adding dictionary:', error);
+            console.error('Error adding word:', error);
         }
     };
 
@@ -127,12 +143,9 @@ export default function DictionaryList() {
 
     const handleClose = () => {
         setOpen(false);
-        setNewDictionaryName('');
-    };
-
-    // 点击 dictionary 时的导航函数
-    const handleDictionaryClick = (id) => {
-        router.push(`/admin/dictionary/${id}`); // 使用路由对象进行导航
+        setNewWord('');
+        setNewTranslation('');
+        setNewExampleSentence('');
     };
 
     return (
@@ -167,7 +180,7 @@ export default function DictionaryList() {
                             id="tableTitle"
                             component="div"
                         >
-                            Dictionaries
+                            Words
                         </Typography>
                     )}
 
@@ -178,7 +191,7 @@ export default function DictionaryList() {
                             </IconButton>
                         </Tooltip>
                     ) : (
-                        <Tooltip title="Add Dictionary">
+                        <Tooltip title="Add Word">
                             <IconButton onClick={handleClickOpen}>
                                 <AddIcon />
                             </IconButton>
@@ -196,12 +209,12 @@ export default function DictionaryList() {
                                     <Checkbox
                                         color="primary"
                                         indeterminate={
-                                            selected.length > 0 && selected.length < dictionaries.length
+                                            selected.length > 0 && selected.length < words.length
                                         }
-                                        checked={dictionaries.length > 0 && selected.length === dictionaries.length}
+                                        checked={words.length > 0 && selected.length === words.length}
                                         onChange={null}
                                         inputProps={{
-                                            'aria-label': 'select all dictionaries',
+                                            'aria-label': 'select all words',
                                         }}
                                     />
                                 </TableCell>
@@ -231,7 +244,7 @@ export default function DictionaryList() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {dictionaries
+                            {words
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     const isItemSelected = isSelected(row.id);
@@ -240,7 +253,7 @@ export default function DictionaryList() {
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={() => handleDictionaryClick(row.id)} // 修改点击事件处理函数
+                                            onClick={(event) => handleClick(event, row.id)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -258,27 +271,20 @@ export default function DictionaryList() {
                                                 />
                                             </TableCell>
                                             <TableCell component="th" id={labelId} scope="row">
-                                                {row.name}
+                                                {row.word}
                                             </TableCell>
+                                            <TableCell>{row.translation}</TableCell>
+                                            <TableCell>{row.exampleSentence}</TableCell>
                                         </TableRow>
                                     );
                                 })}
-                            {emptyRows > 0 && (
-                                <TableRow
-                                    style={{
-                                        height: 53 * emptyRows,
-                                    }}
-                                >
-                                    <TableCell colSpan={6} />
-                                </TableRow>
-                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={dictionaries.length}
+                    count={words.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -286,21 +292,37 @@ export default function DictionaryList() {
                 />
             </Paper>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Add New Dictionary</DialogTitle>
+                <DialogTitle>Add New Word</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
                         margin="dense"
-                        id="name"
-                        label="Dictionary Name"
+                        id="word"
+                        label="Word"
                         fullWidth
-                        value={newDictionaryName}
-                        onChange={(e) => setNewDictionaryName(e.target.value)}
+                        value={newWord}
+                        onChange={(e) => setNewWord(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        id="translation"
+                        label="Translation"
+                        fullWidth
+                        value={newTranslation}
+                        onChange={(e) => setNewTranslation(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        id="example-sentence"
+                        label="Example Sentence"
+                        fullWidth
+                        value={newExampleSentence}
+                        onChange={(e) => setNewExampleSentence(e.target.value)}
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAddDictionary}>Add</Button>
+                    <Button onClick={handleAddWord}>Add</Button>
                 </DialogActions>
             </Dialog>
         </Box>
