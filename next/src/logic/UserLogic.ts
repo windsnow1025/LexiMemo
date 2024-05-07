@@ -70,4 +70,22 @@ export class UserLogic {
     const asciiRegex: RegExp = /^[\x20-\x7F]{4,32}$/;
     return asciiRegex.test(input);
   }
+
+  async linkUserWord(token: string, wordId: number, weights: string, day: string): Promise<void> {
+    try {
+      await this.userService.linkUserWord(token, wordId, weights, day);
+    } catch (error) {
+      console.error("Error linking user word:", error);
+      throw new Error("Failed to link user word.");
+    }
+  }
+
+  async unlinkUserWord(token: string, userId: number): Promise<void> {
+    try {
+      await this.userService.unlinkUserWord(token, userId);
+    } catch (error) {
+      console.error("Error unlinking user word:", error);
+      throw new Error("Failed to unlink user word.");
+    }
+  }
 }
