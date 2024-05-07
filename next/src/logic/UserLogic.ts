@@ -1,11 +1,14 @@
 import UserService from "../service/UserService";
+import WordService from "../service/WordService";
 import {Word} from "@/src/model/Word";
 
 export class UserLogic {
   private userService: UserService;
+  private wordService: WordService;
 
   constructor() {
     this.userService = new UserService();
+    this.wordService = new WordService();
   }
 
   async fetchUsername(): Promise<string | null> {
@@ -93,7 +96,30 @@ export class UserLogic {
       throw new Error("Failed to link user word.");
     }
   }
-  async unlinkUserWord(token: string, userId: number): Promise<void> {
+
+  async linkUserHavedWord(token: string, wordName: string): Promise<void> {
+    try {
+      const weights = '[]';
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 7);
+      const day = currentDate.toISOString().slice(0, 10);
+      const word = await this.wordService.getWordByName(token, wordName);
+      if (!word) {
+        throw new Error(`Word '${wordName}' not found.`);
+      }
+      const wordId = word.id;
+      if (wordId === undefined) {
+        throw new Error(`Word '${wordName}' has no ID.`);
+      }
+      await this.userService.linkUserWord(token, wordId, weights, day);
+    } catch (error) {
+      console.error("Error linking user word:", error);
+      throw new Error("Failed to link user word.");
+    }
+  }
+
+
+    async unlinkUserWord(token: string, userId: number): Promise<void> {
     try {
       await this.userService.unlinkUserWord(token, userId);
     } catch (error) {
@@ -102,9 +128,9 @@ export class UserLogic {
     }
   }
 
-  async getUserWord(token: string): Promise<void> {
+  async getUserWord(token: string):Promise<any> {
     try {
-      await this.userService.getUserWord(token);
+      return  this.userService.getUserWord(token);
     } catch (error) {
       console.error("Error fetching user word:", error);
       throw new Error("Failed to fetch user word.");
