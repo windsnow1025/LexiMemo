@@ -26,8 +26,9 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { visuallyHidden } from '@mui/utils';
-import { DictionaryLogic } from "../../../src/logic/DictionaryLogic"; // Change import
+import { DictionaryLogic } from "../../../src/logic/DictionaryLogic.ts"; // Change import
 import { useRouter } from 'next/router';
+import { WordLogic } from "../../../src/logic/WordLogic";
 
 function createData(id, word, translation, exampleSentence) {
     return { id, word, translation, exampleSentence };
@@ -67,6 +68,7 @@ export default function DictionaryDisplay() {
     const [newExampleSentence, setNewExampleSentence] = useState('');
     const router = useRouter(); // 获取路由对象
     const dictionaryLogic = new DictionaryLogic(); // Instantiate DictionaryLogic
+    const wordLogic = new WordLogic(); // Instantiate WordLogic
 
     useEffect(() => {
         async function fetchWords() {
@@ -127,15 +129,27 @@ export default function DictionaryDisplay() {
         try {
             const token = localStorage.getItem('token');
             const { dictionaryId } = router.query; // 获取路由参数中的 dictionaryId
-            await dictionaryLogic.addWordToDictionary(token, newWord, dictionaryId); // Use dictionaryLogic
+            if (typeof dictionaryId !== 'string') {
+                return;
+            }
+            console.log(dictionaryId)
+
+            // 获取单词信息
+            const wordInfo = await wordLogic.getWordByName(token, newWord);
+            console.log('Word info:', wordInfo);
+
+            // 添加单词到字典中
+            await dictionaryLogic.addWordToDictionary(token, wordInfo.id, parseInt(dictionaryId));
+
             // 添加单词后重新获取单词列表
-            const fetchedWords = await dictionaryLogic.getDictionaryWords(token, dictionaryId); // Use dictionaryLogic
+            const fetchedWords = await dictionaryLogic.getDictionaryWords(token, parseInt(dictionaryId));
             setWords(fetchedWords);
             handleClose();
         } catch (error) {
             console.error('Error adding word:', error);
         }
     };
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -302,22 +316,6 @@ export default function DictionaryDisplay() {
                         fullWidth
                         value={newWord}
                         onChange={(e) => setNewWord(e.target.value)}
-                    />
-                    <TextField
-                        margin="dense"
-                        id="translation"
-                        label="Translation"
-                        fullWidth
-                        value={newTranslation}
-                        onChange={(e) => setNewTranslation(e.target.value)}
-                    />
-                    <TextField
-                        margin="dense"
-                        id="example-sentence"
-                        label="Example Sentence"
-                        fullWidth
-                        value={newExampleSentence}
-                        onChange={(e) => setNewExampleSentence(e.target.value)}
                     />
                 </DialogContent>
                 <DialogActions>

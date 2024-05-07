@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import {User} from "@/src/model/User";
+import {User} from "../model/User";
 import { Word } from '../model/Word';
 
 
