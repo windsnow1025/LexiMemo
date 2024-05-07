@@ -106,6 +106,20 @@ class UserController(val service: UserService,
         }
     }
 
+    @PutMapping("/user/user-word")
+    fun updateUserWord(@RequestHeader("Authorization") token: String, @RequestBody userWord: UserWord): ResponseEntity<Void> {
+        try {
+            if (userWordService.updateUserWord(token, userWord)){
+                return ResponseEntity.ok().build()
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+            }
+        } catch (e: Exception) {
+            println(e)
+            return ResponseEntity.internalServerError().build()
+        }
+    }
+
     @DeleteMapping("/user/{id}")
     fun deleteUserWord(@RequestHeader("Authorization") token: String, @PathVariable("id") id: Int): ResponseEntity<Void> {
         try {

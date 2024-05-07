@@ -1,5 +1,6 @@
 package com.windsnow1025.leximemo.spring.service
 
+import com.windsnow1025.leximemo.spring.entity.UserWord
 import com.windsnow1025.leximemo.spring.logic.parseUsernameFromToken
 import com.windsnow1025.leximemo.spring.repository.UserRepository
 import com.windsnow1025.leximemo.spring.repository.UserWordRepository
@@ -13,21 +14,21 @@ class UserWordService(
 ) {
     fun deleteUserWordByWordId(token: String, wordId: Int): Boolean {
         val username = parseUsernameFromToken(token);
-        val userId = userRepository.findByUsername(username)?.id
-        if (userId != null) {
-            val userWord = userWordRepository.findByUserIdAndWordId(userId, wordId)
-            if (userWord != null) {
-                try {
-                    userWordRepository.delete(userWord)
-                    return true
-                } catch (e : DataAccessException){
-                    throw e
-                }
-            } else {
-                return false
-            }
-        } else {
-            return false
+        val userId = userRepository.findByUsername(username)?.id ?: return false
+        val userWord = userWordRepository.findByUserIdAndWordId(userId, wordId)
+        try {
+            userWordRepository.delete(userWord)
+        } catch (e: DataAccessException) {
+            throw e
         }
+        return true
+    }
+
+    fun updateUserWord(token: String, userWord: UserWord ): Boolean {
+        val username = parseUsernameFromToken(token)
+        val userId = userRepository.findByUsername(username)?.id ?: return false
+        userWord.userId = userId
+        userWordRepository.save(userWord)
+        return true
     }
 }

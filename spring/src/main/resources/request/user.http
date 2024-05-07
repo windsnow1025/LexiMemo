@@ -70,6 +70,19 @@ Authorization: {{token}}
   "day": "2024-12-12"
 }
 
+
+### Update link User Word
+
+PUT {{baseUrl}}/user/user-word
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "wordId": 1,
+  "weights": "[0.7, 0.8, 0.9]",
+  "day": "2024-12-12"
+}
+
 ### Delete link User Word
 
 DELETE {{baseUrl}}/user/1
