@@ -1,5 +1,5 @@
-import {UserWord} from "@/model/UserWord";
-import {Dictionary} from "@/model/Dictionary";
+import {UserWord} from "../model/UserWord";
+import {Dictionary} from "../model/Dictionary";
 
 export class Word {
   id?: number;
