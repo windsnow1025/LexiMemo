@@ -1,5 +1,5 @@
 import WordService from "../service/WordService";
-import {Word} from "../model/Word";
+import { Word } from "../model/Word";
 
 export class WordLogic {
     private wordService: WordService;
@@ -11,8 +11,8 @@ export class WordLogic {
     async getWords(token: string): Promise<Word[]> {
         try {
             return await this.wordService.getWords(token);
-        } catch (err) {
-            console.error(err);
+        } catch (error) {
+            console.error(error);
             throw new Error("Failed to fetch words.");
         }
     }
@@ -20,8 +20,8 @@ export class WordLogic {
     async getWordByName(token: string, word: string): Promise<Word> {
         try {
             return await this.wordService.getWordByName(token, word);
-        } catch (err) {
-            console.error(err);
+        } catch (error) {
+            console.error(error);
             throw new Error("Failed to fetch word by name.");
         }
     }
@@ -29,23 +29,27 @@ export class WordLogic {
     async getWordById(token: string, id: number): Promise<Word> {
         try {
             return await this.wordService.getWordById(token, id);
-        } catch (err) {
-            console.error(err);
+        } catch (error) {
+            console.error(error);
             throw new Error("Failed to fetch word by ID.");
         }
     }
 
-    async addWord(token: string, word: string, translation: string, exampleSentence: string, frequency: number) {
+    async addWord(token: string, word: Word | Word[]) {
         try {
-            await this.wordService.addWord(token, word, translation, exampleSentence, frequency);
-        } catch (err: any) {
-            // Handle specific error based on the thrown error message
-            if (err.message === "Insufficient permission to add word") {
-                throw new Error("You do not have permission to add words.");
-            } else {
-                console.error(err);
-                throw new Error("Failed to add word.");
-            }
+            await this.wordService.addWord(token, word);
+        } catch (error) {
+            console.error(error);
+            throw new Error("Failed to add word.");
+        }
+    }
+
+    async deleteWordById(token: string, id: number) {
+        try {
+            await this.wordService.deleteWordById(token, id);
+        } catch (error) {
+            console.error(error);
+            throw new Error("Failed to delete word by ID.");
         }
     }
 }

@@ -1,9 +1,10 @@
-import axios, {AxiosInstance} from 'axios';
-import {Dictionary} from "../model/Dictionary";
-import {Word} from "../model/Word";
+import axios, { AxiosInstance } from 'axios';
+import { Dictionary } from '../model/Dictionary';
+import { Word } from '../model/Word';
 
 export default class DictionaryService {
     private axiosInstance: AxiosInstance;
+
     constructor() {
         this.axiosInstance = axios.create({ baseURL: process.env.NEXT_PUBLIC_NODE_API_BASE_URL });
     }
@@ -32,7 +33,7 @@ export default class DictionaryService {
         }
     }
 
-    async getDictionaryWords(token: string, dictionaryId: number): Promise<Word> {
+    async getDictionaryWords(token: string, dictionaryId: number): Promise<Word[]> {
         try {
             const response = await this.axiosInstance.get(`/dictionary/${dictionaryId}`, {
                 headers: { Authorization: token }
@@ -46,13 +47,25 @@ export default class DictionaryService {
 
     async addWordToDictionary(token: string, wordId: number, dictionaryId: number) {
         try {
-            const response = await this.axiosInstance.post(`/dictionary/${dictionaryId}/word/${wordId}`,  {
+            const response = await this.axiosInstance.post(`/dictionary/${dictionaryId}/word/${wordId}`, {}, {
                 headers: { Authorization: token, 'Content-Type': 'application/json' }
             });
             return response.data;
         } catch (error) {
             console.error('Failed to add word to dictionary:', error);
             throw new Error('Failed to add word to dictionary.');
+        }
+    }
+
+    async deleteWordFromDictionary(token: string, wordId: number, dictionaryId: number) {
+        try {
+            const response = await this.axiosInstance.delete(`/dictionary/${dictionaryId}/word/${wordId}`, {
+                headers: { Authorization: token, 'Content-Type': 'application/json' }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Failed to delete word from dictionary:', error);
+            throw new Error('Failed to delete word from dictionary.');
         }
     }
 }
