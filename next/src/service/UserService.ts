@@ -95,4 +95,5 @@ async unlinkUserWord(token: string, userId: number): Promise<void> {
     throw new Error("Failed to unlink user word.");
   }
 }
+
 }

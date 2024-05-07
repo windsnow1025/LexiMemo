@@ -1,4 +1,5 @@
 import UserService from "../service/UserService";
+import {Word} from "@/src/model/Word";
 
 export class UserLogic {
   private userService: UserService;
@@ -80,12 +81,33 @@ export class UserLogic {
     }
   }
 
+  async linkUserNewWord(token: string, wordId: number): Promise<void> {
+    try {
+      const weights = '[]';
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 7);
+      const day = currentDate.toISOString().slice(0, 10);
+      await this.userService.linkUserWord(token, wordId, weights, day);
+    } catch (error) {
+      console.error("Error linking user word:", error);
+      throw new Error("Failed to link user word.");
+    }
+  }
   async unlinkUserWord(token: string, userId: number): Promise<void> {
     try {
       await this.userService.unlinkUserWord(token, userId);
     } catch (error) {
       console.error("Error unlinking user word:", error);
       throw new Error("Failed to unlink user word.");
+    }
+  }
+
+  async getUserWord(token: string): Promise<void> {
+    try {
+      await this.userService.getUserWord(token);
+    } catch (error) {
+      console.error("Error fetching user word:", error);
+      throw new Error("Failed to fetch user word.");
     }
   }
 }
