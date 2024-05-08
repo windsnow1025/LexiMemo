@@ -1,6 +1,7 @@
 import axios from 'axios';
+
 const sendPostRequestAndPlayWav = async (text) => {
-    const url = '/api/proxy'; // 使用 API 代理的地址
+    const url = 'http://48d1p74958.qicp.vip:9880';
     const headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -9,21 +10,21 @@ const sendPostRequestAndPlayWav = async (text) => {
         text: text,
         text_language: 'zh',
     };
+
     try {
         const response = await axios.post(url, data, {
             headers: headers,
             responseType: 'arraybuffer',
         });
 
+        console.log('Response data:', response.data);
+        console.log('Response data length:', response.data.byteLength);
+
         if (response.status === 200) {
-            const audioBlob = new Blob([response.data], { type: 'audio/wav' });
-            const audioUrl = URL.createObjectURL(audioBlob);
+            // Convert response data to ArrayBuffer
+            const arrayBuffer = response.data;
 
-            // 新增从 Blob URL 中获得 ArrayBuffer 的操作
-            const arrayBuffer = await (await fetch(audioUrl)).arrayBuffer();
-
-            const audioContext = new (window.AudioContext ||
-                window.webkitAudioContext)();
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
             const audioSource = audioContext.createBufferSource();
             audioSource.buffer = audioBuffer;
