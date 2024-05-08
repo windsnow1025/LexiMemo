@@ -19,5 +19,7 @@ function calculateWeightedFamiliarity(familiarityVector: number[]) {
 }
 
 function getNextInterval(weightedFamiliarity: number) {
-  return Math.ceil(2 / (1 - weightedFamiliarity));
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + Math.ceil(2 / (1 - weightedFamiliarity)));
+  return currentDate.toISOString().slice(0, 10);
 }

@@ -13,6 +13,9 @@ const WordCard = () => {
     const [words, setWords] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [finished, setFinished] = useState(false);
+    const [showTranslation, setShowTranslation] = useState(false);
+    const [showExampleSentence, setShowExampleSentence] = useState(false);
+    const [showNextButton, setShowNextButton] = useState(false);
 
     useEffect(() => {
         async function fetchWords() {
@@ -42,6 +45,9 @@ const WordCard = () => {
     const handleNextWord = () => {
         if (currentIndex < words.length - 1) {
             setCurrentIndex(currentIndex + 1);
+            setShowTranslation(false); // Reset translation display
+            setShowExampleSentence(false); // Reset example sentence display
+            setShowNextButton(false); // Reset next button display
         } else {
             // All words are finished
             setFinished(true);
@@ -49,15 +55,21 @@ const WordCard = () => {
     };
 
     const handleKnow = () => {
-        handleNextWord();
+        setShowTranslation(true);
+        setShowExampleSentence(true);
+        if (!finished) setShowNextButton(true);
     };
 
     const handleBlur = () => {
-        handleNextWord();
+        setShowTranslation(true);
+        setShowExampleSentence(true);
+        if (!finished) setShowNextButton(true);
     };
 
     const handleNotKnow = () => {
-        handleNextWord();
+        setShowTranslation(true);
+        setShowExampleSentence(true);
+        if (!finished) setShowNextButton(true);
     };
 
     return (
@@ -72,16 +84,26 @@ const WordCard = () => {
                             今日单词已背完，恭喜你！
                         </Typography>
                     ) : (
-                        words.length > 0 && (
+                        <>
                             <Typography variant="h5" component="div">
-                                {words[currentIndex].word.word}
+                                {words[currentIndex]?.word?.word}
                             </Typography>
-                        )
+                            {showTranslation && (
+                                <Typography variant="body1" component="div">
+                                    翻译: {words[currentIndex]?.word?.translation}
+                                </Typography>
+                            )}
+                            {showExampleSentence && (
+                                <Typography variant="body1" component="div">
+                                    例句: {words[currentIndex]?.word?.exampleSentence}
+                                </Typography>
+                            )}
+                        </>
                     )}
                 </Box>
             </CardContent>
             <CardActions sx={{ justifyContent: 'center' }}>
-                {!finished && (
+                {!finished && !showNextButton && (
                     <>
                         <Button size="small" variant="contained" onClick={handleKnow}>
                             认识
@@ -94,9 +116,14 @@ const WordCard = () => {
                         </Button>
                     </>
                 )}
+                {showNextButton && (
+                    <Button size="small" variant="contained" onClick={handleNextWord}>
+                        下一个
+                    </Button>
+                )}
             </CardActions>
-            {!finished && (
-                <Button size="small" onClick={() => handlePlayAudio(words[currentIndex].word.word)} sx={{ justifyContent: 'center' }}>
+            {!finished && !showNextButton && (
+                <Button size="small" onClick={() => handlePlayAudio(words[currentIndex]?.word?.word)} sx={{ justifyContent: 'center' }}>
                     <PlayArrowIcon />
                 </Button>
             )}
