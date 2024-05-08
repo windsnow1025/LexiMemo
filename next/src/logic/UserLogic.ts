@@ -118,6 +118,15 @@ export class UserLogic {
     }
   }
 
+  async updateLinkedUserWord(token: string, wordId: number, weights: string, day: string): Promise<void> {
+    try {
+      await this.userService.updateLinkedUserWord(token, wordId, weights, day);
+    } catch (error) {
+      console.error("Error updating linked user word:", error);
+      throw new Error("Failed to update linked user word.");
+    }
+  }
+
 
     async unlinkUserWord(token: string, userId: number): Promise<void> {
     try {

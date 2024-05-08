@@ -85,6 +85,18 @@ async linkUserWord(token: string, wordId: number, weights: string, day: string):
   }
 }
 
+  async updateLinkedUserWord(token: string, wordId: number, weights: string, day: string): Promise<void> {
+    try {
+      await this.axiosInstance.put("/user/user-word", { wordId, weights, day }, {
+        headers: { Authorization: token, 'Content-Type': 'application/json' }
+      });
+    } catch (error) {
+      console.error("Error updating linked user word:", error);
+      throw new Error("Failed to update linked user word.");
+    }
+  }
+
+
 async unlinkUserWord(token: string, userId: number): Promise<void> {
   try {
     await this.axiosInstance.delete(`/user/${userId}`, {
