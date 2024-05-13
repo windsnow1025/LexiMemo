@@ -122,11 +122,9 @@ const WordCard = () => {
                     </Button>
                 )}
             </CardActions>
-            {!finished && !showNextButton && (
-                <Button size="small" onClick={() => handlePlayAudio(words[currentIndex]?.word?.word)} sx={{ justifyContent: 'center' }}>
-                    <PlayArrowIcon />
-                </Button>
-            )}
+            <Button size="small" onClick={() => handlePlayAudio(words[currentIndex]?.word?.word)} sx={{ justifyContent: 'center' }}>
+                <PlayArrowIcon />
+            </Button>
         </Card>
     );
 };
