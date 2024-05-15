@@ -6,8 +6,11 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import { sendPostRequestAndPlayWav } from '../../../src/service/AudioService';
 import { UserLogic } from '../../../src/logic/UserLogic';
+import { getDailyFamiliarity, addToFamiliarityVector, calculateWeightedFamiliarity, getNextInterval } from '../../../src/logic/MemoryLogic';
 
 const WordCard = () => {
     const [words, setWords] = useState([]);
@@ -16,6 +19,8 @@ const WordCard = () => {
     const [showTranslation, setShowTranslation] = useState(false);
     const [showExampleSentence, setShowExampleSentence] = useState(false);
     const [showNextButton, setShowNextButton] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     useEffect(() => {
         async function fetchWords() {
@@ -27,7 +32,10 @@ const WordCard = () => {
                 // Sort words by day in ascending order
                 const sortedWords = userWords.sort((a, b) => new Date(a.word.day) - new Date(b.word.day));
                 // Limit to first 5 words
-                const limitedWords = sortedWords.slice(0, 5);
+                const limitedWords = sortedWords.slice(0, 5).map(wordObj => {
+                    // Initialize companion array for each word
+                    return { ...wordObj, companionArray: [] };
+                });
                 console.log("Limited words:", limitedWords);
                 setWords(limitedWords);
             } catch (error) {
@@ -43,8 +51,10 @@ const WordCard = () => {
     };
 
     const handleNextWord = () => {
-        if (currentIndex < words.length - 1) {
-            setCurrentIndex(currentIndex + 1);
+        // Check for consecutive '1's before moving to next word
+        checkConsecutiveOnes(words[0].companionArray);
+        if (words.length > 1) {
+            setCurrentIndex(0);
             setShowTranslation(false); // Reset translation display
             setShowExampleSentence(false); // Reset example sentence display
             setShowNextButton(false); // Reset next button display
@@ -55,77 +65,153 @@ const WordCard = () => {
     };
 
     const handleKnow = () => {
+        // Update companion array for the current word
+        const updatedWords = [...words];
+        updatedWords[0].companionArray.push(1);
+        setWords(updatedWords);
         setShowTranslation(true);
         setShowExampleSentence(true);
         if (!finished) setShowNextButton(true);
+        console.log("words:"+words)
     };
 
     const handleBlur = () => {
+        // Update companion array for the current word
+        const updatedWords = [...words];
+        updatedWords[0].companionArray.push(-1);
+        setWords(updatedWords);
         setShowTranslation(true);
         setShowExampleSentence(true);
         if (!finished) setShowNextButton(true);
     };
 
     const handleNotKnow = () => {
+        // Update companion array for the current word
+        const updatedWords = [...words];
+        updatedWords[0].companionArray.push(0);
+        setWords(updatedWords);
         setShowTranslation(true);
         setShowExampleSentence(true);
         if (!finished) setShowNextButton(true);
     };
 
+    const checkConsecutiveOnes = (companionArray) => {
+        // Implement your logic to check for consecutive '1's here
+        const lastTwo = companionArray.slice(-2);
+        if (lastTwo[0] === 1 && lastTwo[1] === 1) {
+            // Delete the word if two consecutive '1's found
+            const updatedWords = words.filter((word, index) => index !== currentIndex);
+            setWords(updatedWords);
+            const { zeros, ones } = countZerosAndOnes(companionArray);
+            const DailyFamiliarity = getDailyFamiliarity(ones, zeros);
+            const weightsString = updatedWords[0].weights;
+            const weightsArray = JSON.parse(weightsString);
+            addToFamiliarityVector(weightsArray, DailyFamiliarity);
+            const WeightedFamiliarity = calculateWeightedFamiliarity(weightsArray);
+            const NextInterval = getNextInterval(WeightedFamiliarity);
+            console.log("weightsArray:"+weightsArray);
+            console.log("NextInterval:"+NextInterval);
+            setSnackbarMessage("下次背诵时间：" + NextInterval);
+            setSnackbarOpen(true);
+            const updatedWeightString = JSON.stringify(weightsArray);
+            const token = localStorage.getItem('token');
+            console.log("updateWord:"+updatedWords);
+            console.log("wordId:"+updatedWords[0].wordId);
+            console.log("weights:"+updatedWeightString);
+            console.log("day:"+NextInterval);
+            const userLogic = new UserLogic();
+            userLogic.updateLinkedUserWord(token, updatedWords[0].wordId, updatedWeightString, NextInterval)
+            setCurrentIndex(0);
+
+        } else {
+            // Insert the word at a random position in limitedWords array
+            const randomIndex = Math.floor(Math.random() * (words.length - currentIndex)) + currentIndex;
+            const updatedWords = [...words];
+            const currentWord = updatedWords[0];
+            updatedWords.splice(0, 1);
+            updatedWords.splice(randomIndex, 0, currentWord);
+            setWords(updatedWords);
+        }
+    };
+
+    const countZerosAndOnes = (companionArray) => {
+        const count = companionArray.reduce((acc, currentValue) => {
+            if (currentValue === 0) {
+                acc.zeros++;
+            } else if (currentValue === 1) {
+                acc.ones++;
+            }
+            return acc;
+        }, { zeros: 0, ones: 0 });
+
+        return count;
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
+    };
+
     return (
-        <Card sx={{ maxWidth: 500 }}>
-            <CardContent>
-                <Box sx={{ textAlign: 'center' }}>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        Word of the Day
-                    </Typography>
-                    {finished ? (
-                        <Typography variant="h5" component="div">
-                            今日单词已背完，恭喜你！
+        <>
+            <Card sx={{ maxWidth: 500 }}>
+                <CardContent>
+                    <Box sx={{ textAlign: 'center' }}>
+                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                            Word of the Day
                         </Typography>
-                    ) : (
-                        <>
+                        {finished ? (
                             <Typography variant="h5" component="div">
-                                {words[currentIndex]?.word?.word}
+                                今日单词已背完，恭喜你！
                             </Typography>
-                            {showTranslation && (
-                                <Typography variant="body1" component="div">
-                                    翻译: {words[currentIndex]?.word?.translation}
+                        ) : (
+                            <>
+                                <Typography variant="h5" component="div">
+                                    {words[0]?.word?.word}
                                 </Typography>
-                            )}
-                            {showExampleSentence && (
-                                <Typography variant="body1" component="div">
-                                    例句: {words[currentIndex]?.word?.exampleSentence}
-                                </Typography>
-                            )}
+                                {showTranslation && (
+                                    <Typography variant="body1" component="div">
+                                        翻译: {words[0]?.word?.translation}
+                                    </Typography>
+                                )}
+                                {showExampleSentence && (
+                                    <Typography variant="body1" component="div">
+                                        例句: {words[0]?.word?.exampleSentence}
+                                    </Typography>
+                                )}
+                            </>
+                        )}
+                    </Box>
+                </CardContent>
+                <CardActions sx={{ justifyContent: 'center' }}>
+                    {!finished && !showNextButton && (
+                        <>
+                            <Button size="small" variant="contained" onClick={handleKnow}>
+                                认识
+                            </Button>
+                            <Button size="small" onClick={handleBlur}>
+                                模糊
+                            </Button>
+                            <Button size="small" variant="contained" onClick={handleNotKnow}>
+                                不认识
+                            </Button>
                         </>
                     )}
-                </Box>
-            </CardContent>
-            <CardActions sx={{ justifyContent: 'center' }}>
-                {!finished && !showNextButton && (
-                    <>
-                        <Button size="small" variant="contained" onClick={handleKnow}>
-                            认识
+                    {showNextButton && (
+                        <Button size="small" variant="contained" onClick={handleNextWord}>
+                            下一个
                         </Button>
-                        <Button size="small" onClick={handleBlur}>
-                            模糊
-                        </Button>
-                        <Button size="small" variant="contained" onClick={handleNotKnow}>
-                            不认识
-                        </Button>
-                    </>
-                )}
-                {showNextButton && (
-                    <Button size="small" variant="contained" onClick={handleNextWord}>
-                        下一个
-                    </Button>
-                )}
-            </CardActions>
-            <Button size="small" onClick={() => handlePlayAudio(words[currentIndex]?.word?.word)} sx={{ justifyContent: 'center' }}>
-                <PlayArrowIcon />
-            </Button>
-        </Card>
+                    )}
+                </CardActions>
+                <Button size="small" onClick={() => handlePlayAudio(words[0]?.word?.word)} sx={{ justifyContent: 'center' }}>
+                    <PlayArrowIcon />
+                </Button>
+            </Card>
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <MuiAlert onClose={handleCloseSnackbar} severity="info" sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </MuiAlert>
+            </Snackbar>
+        </>
     );
 };
 
