@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 const filter = createFilterOptions();
 
-export default function AutocompleteAdmin() {
+export default function AutoCompleteAdmin() {
     const router = useRouter(); // 使用 useRouter 钩子获取 router 对象
     const [value, setValue] = React.useState(null);
 

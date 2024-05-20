@@ -72,7 +72,6 @@ const WordCard = () => {
         setShowTranslation(true);
         setShowExampleSentence(true);
         if (!finished) setShowNextButton(true);
-        console.log("words:"+words)
     };
 
     const handleBlur = () => {
@@ -101,28 +100,29 @@ const WordCard = () => {
         if (lastTwo[0] === 1 && lastTwo[1] === 1) {
             // Delete the word if two consecutive '1's found
             const updatedWords = words.filter((word, index) => index !== currentIndex);
+            if (updatedWords.length > 0) {
+                const { zeros, ones } = countZerosAndOnes(companionArray);
+                const DailyFamiliarity = getDailyFamiliarity(ones, zeros);
+                const weightsString = updatedWords[0].weights;
+                const weightsArray = JSON.parse(weightsString);
+                addToFamiliarityVector(weightsArray, DailyFamiliarity);
+                const WeightedFamiliarity = calculateWeightedFamiliarity(weightsArray);
+                const NextInterval = getNextInterval(WeightedFamiliarity);
+                console.log("weightsArray:"+weightsArray);
+                console.log("NextInterval:"+NextInterval);
+                setSnackbarMessage("下次背诵时间：" + NextInterval);
+                setSnackbarOpen(true);
+                const updatedWeightString = JSON.stringify(weightsArray);
+                const token = localStorage.getItem('token');
+                console.log("updateWord:"+updatedWords);
+                console.log("wordId:"+updatedWords[0].wordId);
+                console.log("weights:"+updatedWeightString);
+                console.log("day:"+NextInterval);
+                const userLogic = new UserLogic();
+                userLogic.updateLinkedUserWord(token, updatedWords[0].wordId, updatedWeightString, NextInterval)
+            }
             setWords(updatedWords);
-            const { zeros, ones } = countZerosAndOnes(companionArray);
-            const DailyFamiliarity = getDailyFamiliarity(ones, zeros);
-            const weightsString = updatedWords[0].weights;
-            const weightsArray = JSON.parse(weightsString);
-            addToFamiliarityVector(weightsArray, DailyFamiliarity);
-            const WeightedFamiliarity = calculateWeightedFamiliarity(weightsArray);
-            const NextInterval = getNextInterval(WeightedFamiliarity);
-            console.log("weightsArray:"+weightsArray);
-            console.log("NextInterval:"+NextInterval);
-            setSnackbarMessage("下次背诵时间：" + NextInterval);
-            setSnackbarOpen(true);
-            const updatedWeightString = JSON.stringify(weightsArray);
-            const token = localStorage.getItem('token');
-            console.log("updateWord:"+updatedWords);
-            console.log("wordId:"+updatedWords[0].wordId);
-            console.log("weights:"+updatedWeightString);
-            console.log("day:"+NextInterval);
-            const userLogic = new UserLogic();
-            userLogic.updateLinkedUserWord(token, updatedWords[0].wordId, updatedWeightString, NextInterval)
             setCurrentIndex(0);
-
         } else {
             // Insert the word at a random position in limitedWords array
             const randomIndex = Math.floor(Math.random() * (words.length - currentIndex)) + currentIndex;
