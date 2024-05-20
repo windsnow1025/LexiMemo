@@ -20,7 +20,7 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import AutoCompleteAdmin from './AutoCompleteAdmin';
+import AutoCompleteUser from './AutoCompleteUser';
 import { UserLogic } from '../../../src/logic/UserLogic';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -167,7 +167,8 @@ export default function PrimarySearchAppBar() {
 
     const handleLogout = async () => {
         try {
-            localStorage.removeItem('token')
+            // 清除浏览器token
+            localStorage.removeItem('token');
             setLoggedInUsername(null);
             setSnackbarSeverity('success');
             setSnackbarMessage('成功退出');
@@ -215,7 +216,9 @@ export default function PrimarySearchAppBar() {
                 </>
             )}
         </Menu>
-    );const mobileMenuId = 'primary-search-account-menu-mobile';
+    );
+
+    const mobileMenuId = 'primary-search-account-menu-mobile';
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
@@ -235,7 +238,7 @@ export default function PrimarySearchAppBar() {
             <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                     <Badge badgeContent={4} color="secondary">
-                        <MailIcon />
+                        <MailIcon/>
                     </Badge>
                 </IconButton>
                 <p>Messages</p>
@@ -247,7 +250,7 @@ export default function PrimarySearchAppBar() {
                     color="inherit"
                 >
                     <Badge badgeContent={17} color="secondary">
-                        <NotificationsIcon />
+                        <NotificationsIcon/>
                     </Badge>
                 </IconButton>
                 <p>Notifications</p>
@@ -260,7 +263,7 @@ export default function PrimarySearchAppBar() {
                     aria-haspopup="true"
                     color="inherit"
                 >
-                    <AccountCircle />
+                    <AccountCircle/>
                 </IconButton>
                 <p>Profile</p>
             </MenuItem>
@@ -272,7 +275,7 @@ export default function PrimarySearchAppBar() {
     };
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton
@@ -293,7 +296,7 @@ export default function PrimarySearchAppBar() {
                         哐哐背单词
                     </Typography>
                     <Box sx={{width: 50}}/>
-                    <AutoCompleteAdmin/>
+                    <AutoCompleteUser/>
                     <Box sx={{flexGrow: 1}}/>
                     <Box sx={{display: {xs: 'none', md: 'flex'}}}>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
@@ -334,7 +337,7 @@ export default function PrimarySearchAppBar() {
                             <MoreIcon/>
                         </IconButton>
                     </Box>
-                    <Box sx={{ m: 2 }}>
+                    <Box sx={{m: 2}}>
                         <ThemeSelect/>
                     </Box>
                 </Toolbar>
@@ -345,23 +348,19 @@ export default function PrimarySearchAppBar() {
                 onClose={toggleDrawer(false)}
             >
                 <List>
-                    <ListItem button key={'主页'} onClick={() => handleNavigation('/admin')}>
-                        <ListItemText primary={'主页'} />
+                    <ListItem button key={'主页'} onClick={() => handleNavigation('/')}>
+                        <ListItemText primary={'主页'}/>
                     </ListItem>
-                    <ListItem button key={'用户管理'} onClick={() => handleNavigation('/admin/user')}>
-                        <ListItemText primary={'用户管理'} />
+                    <ListItem button key={'用户单词管理'} onClick={() => handleNavigation('/user/modify-your-words')}>
+                        <ListItemText primary={'单词管理'}/>
                     </ListItem>
-                    <ListItem button key={'单词管理'} onClick={() => handleNavigation('/admin/word')}>
-                        <ListItemText primary={'单词管理'} />
-                    </ListItem>
-                    <ListItem button key={'词书管理'} onClick={() => handleNavigation('/admin/dictionary')}>
-                        <ListItemText primary={'词书管理'} />
+                    <ListItem button key={'数据分析'} onClick={() => handleNavigation('/user/data-analysis')}>
+                        <ListItemText primary={'数据分析'}/>
                     </ListItem>
                 </List>
             </Drawer>
             {renderMobileMenu}
             {renderMenu}
-
             {/* Login Dialog */}
             <Dialog open={isLoginDialogOpen} onClose={() => setIsLoginDialogOpen(false)}>
                 <DialogTitle>登录</DialogTitle>

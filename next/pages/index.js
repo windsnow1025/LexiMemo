@@ -8,6 +8,7 @@ import {useTheme} from "../app/hooks/useTheme";
 import {CssBaseline, Button} from "@mui/material";
 import WordCard from "../app/components/common/WordCard";
 import Box from "@mui/material/Box";
+import NavBarUser from "../app/components/common/NavBarUser";
 import {Link} from "react-router-dom";
 
 function Index() {
@@ -20,7 +21,7 @@ function Index() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline enableColorScheme />
-            <HeaderAppBar title="LexiMemo"/>
+            <NavBarUser />
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                 <WordCard />
             </Box>
