@@ -1,3 +1,4 @@
+// DEPRECATED!!! 请用memory文件夹中的新MemoryLogic
 // 认识|模糊|不认识的次数 -> 当日熟知度
 export function getDailyFamiliarity(knownCount: number, unknownCount: number): number {
   let dailyFamiliarity = 0.5 * knownCount - 0.7 * unknownCount;
