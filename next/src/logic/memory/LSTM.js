@@ -13,9 +13,9 @@ export function loadModel() {
 }
 
 // 进行推理
-export async function predict(session, inputData, intervalDays) {
+export async function predict(session, memoryHistory, intervalDays) {
   // 将记忆状态和间隔日期组合在一起
-  const combinedData = inputData.map((data, index) => [...data, intervalDays[index]]);
+  const combinedData = memoryHistory.map((data, index) => [...data, intervalDays[index]]);
   const flatData = combinedData.flat();
   const tensor = new ort.Tensor('float32', new Float32Array(flatData), [1, combinedData.length, combinedData[0].length]);
   const lengths = new ort.Tensor('int64', new BigInt64Array([BigInt(combinedData.length)]), [1]);
