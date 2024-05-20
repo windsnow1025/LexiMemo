@@ -127,5 +127,16 @@ torch.save(model.state_dict(), 'lstm_model.pth')
 example_input = torch.randn(1, X_train.shape[1], X_train.shape[2])
 example_lengths = torch.tensor([X_train.shape[1]])
 
-# 导出模型为ONNX格式
-torch.onnx.export(model, (example_input, example_lengths), "lstm_model.onnx", input_names=['input', 'lengths'], output_names=['output'])
+# 导出模型为ONNX格式，指定动态轴
+torch.onnx.export(
+    model,
+    (example_input, example_lengths),
+    "lstm_model.onnx",
+    input_names=['input', 'lengths'],
+    output_names=['output'],
+    dynamic_axes={
+        'input': {1: 'sequence_length'},
+        'lengths': {0: 'batch_size'},
+        'output': {0: 'batch_size'}
+    }
+)
