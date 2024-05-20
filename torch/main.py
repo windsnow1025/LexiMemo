@@ -4,28 +4,31 @@ import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-# 假设输入数据
+# 输入数据 [known, familiar, unknown]
 data = [
     [
-        [3, 2, 1],
-        [4, 1, 2],
-        [2, 3, 1]
+        [4, 2, 3],
+        [2, 0, 0],
+        [3, 1, 2],
+        [2, 0, 0],
+        [2, 0, 0],
+        [2, 0, 0]
     ],
     [
-        [1, 2, 3],
-        [2, 1, 3],
-        [3, 2, 1],
-        [4, 1, 2],
-        [5, 0, 3]
+        [3, 1, 1],
+        [3, 1, 0],
+        [2, 0, 0],
+        [2, 0, 0],
+        [3, 0, 1]
     ]
 ]
 interval_days = [
-    [1, 2, 3],
-    [1, 2, 3, 4, 5]
+    [1, 3, 2, 6, 18, 54],
+    [1, 2, 6, 18, 9]
 ]
 labels = [
-    [2, 1, 0],  # unknown, familiar, known
-    [1, 2, 0, 1, 2]  # familiar, unknown, known, familiar, unknown
+    [2, 0, 1, 0, 0, 0],
+    [2, 1, 0, 0, 2]
 ]
 
 # 数据预处理
@@ -116,3 +119,13 @@ with torch.no_grad():
     _, predicted = torch.max(outputs.data, 1)
     accuracy = (predicted == y_test).sum().item() / y_test.size(0)
     print(f'Accuracy: {accuracy * 100:.2f}%')
+
+# 保存模型参数
+torch.save(model.state_dict(), 'lstm_model.pth')
+
+# 创建一个示例输入
+example_input = torch.randn(1, X_train.shape[1], X_train.shape[2])
+example_lengths = torch.tensor([X_train.shape[1]])
+
+# 导出模型为ONNX格式
+torch.onnx.export(model, (example_input, example_lengths), "lstm_model.onnx", input_names=['input', 'lengths'], output_names=['output'])
