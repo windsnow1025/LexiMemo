@@ -15,9 +15,9 @@ test('ONNX model prediction', async () => {
     const inputData = [
       [3, 2, 1],  // 记忆状态
       [4, 1, 2],
-      [2, 3, 1]
+      [2, 0, 0]
     ];
-    const intervalDays = [1, 2, 3];  // 间隔日期
+    const intervalDays = [1, 2, 6];  // 间隔日期
     const output = await predict(session, inputData, intervalDays);
     console.log('Prediction:', output);
   } finally {
