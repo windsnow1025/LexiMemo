@@ -1,4 +1,4 @@
-import {loadModel, predict} from "LSTM";
+import {loadModel, predict} from "./LSTM.js";
 
 /**
  * const memoryHistory = [
@@ -10,16 +10,15 @@ import {loadModel, predict} from "LSTM";
  * **/
 export async function getNextIntervalFromData(memoryHistory, prevIntervalDays) {
   const session = await loadModel();
-  let nextInterval = 1;
+  let intervalDays = [...prevIntervalDays, 1];
   while (true) {
-    const intervalDays = prevIntervalDays.push(nextInterval);
+    intervalDays[intervalDays.length - 1] += 1;
     const familiarityStatus = await getFamiliarityStatusFromData(session, memoryHistory, intervalDays);
-    if (familiarityStatus === 2) {
+    if (familiarityStatus === 1) {
       break;
     }
-    nextInterval += 1;
   }
-  return nextInterval;
+  return intervalDays;
 }
 
 async function getFamiliarityStatusFromData(session, memoryHistory, intervalDays) {
