@@ -1,5 +1,4 @@
-import {loadModel, predict} from "@/src/logic/memory/LSTM";
-import {InferenceSession} from "onnxruntime-common";
+import {loadModel, predict} from "LSTM";
 
 /**
  * const memoryHistory = [
@@ -7,7 +6,7 @@ import {InferenceSession} from "onnxruntime-common";
  *   [4, 1, 2],
  *   [3, 1, 0]
  * ];
- * const intervalDays = [1, 2]; // 长度比memoryHistory少1
+ * const prevIntervalDays = [1, 2]; // 长度比memoryHistory少1
  * **/
 export async function getNextIntervalFromData(memoryHistory, prevIntervalDays) {
   const session = await loadModel();
