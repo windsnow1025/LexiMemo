@@ -92,6 +92,8 @@ export class UserLogic {
       const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 1);
       const newDate = currentDate.toISOString().slice(0, 10);
+      console.log("newDate", newDate);
+
       await this.userService.linkUserWord(token, wordId, weights, days, newDate);
     } catch (error) {
       console.error("Error linking user word:", error);
@@ -105,7 +107,9 @@ export class UserLogic {
       const days = '[]';
       const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 1);
+      console.log("currentDate", currentDate);
       const newDate = currentDate.toISOString().slice(0, 10);
+      console.log("newDate", newDate);
       const word = await this.wordService.getWordByName(token, wordName);
       if (!word) {
         throw new Error(`Word '${wordName}' not found.`);

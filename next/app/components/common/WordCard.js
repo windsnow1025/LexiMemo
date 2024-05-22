@@ -94,7 +94,7 @@ const WordCard = () => {
         if (!finished) setShowNextButton(true);
     };
 
-    const checkConsecutiveOnes = (companionArray) => {
+    const checkConsecutiveOnes = async (companionArray) => {
         // Implement your logic to check for consecutive '1's here
         const lastTwo = companionArray.slice(-2);
         if (lastTwo[0] === 1 && lastTwo[1] === 1){
@@ -104,41 +104,21 @@ const WordCard = () => {
             //把[zeros, ones, negatives]加入weightArray中
             weightArray.push([zeros, negatives, ones]);
             const prevIntervalDays = words[0].days
-            const oldDate = words[0].newDate;
+            const oldDate = words[0].nextDate;
             const prevIntervalDaysArray = JSON.parse(prevIntervalDays);
-            const NextInterval = getNextIntervalFromData(weightArray, prevIntervalDaysArray);
-            console.log("NextInterval:"+NextInterval);
+            const nextInterval = await getNextIntervalFromData(weightArray, prevIntervalDaysArray);
             //newDate为oldDate加上NextInterval的天数
             const newDate = new Date(oldDate);
-            newDate.setDate(newDate.getDate() + NextInterval);
-            prevIntervalDaysArray.push(NextInterval);
+            newDate.setDate(newDate.getDate() + nextInterval);
+            const updatedNewDate = newDate.toISOString().slice(0, 10);
+            prevIntervalDaysArray.push(nextInterval);
             const updatedWeightString = JSON.stringify(weightArray);
             const updatedDaysString = JSON.stringify(prevIntervalDaysArray);
             const token = localStorage.getItem('token');
             const userLogic = new UserLogic();
-            userLogic.updateLinkedUserWord(token, words[0].wordId, updatedWeightString, updatedDaysString, newDate);
-
-
-
-            // const DailyFamiliarity = getDailyFamiliarity(ones, zeros);
-            // const weightsString = updatedWords[0].weights;
-            // const weightsArray = JSON.parse(weightsString);
-            // addToFamiliarityVector(weightsArray, DailyFamiliarity);
-            // const WeightedFamiliarity = calculateWeightedFamiliarity(weightsArray);
-            // const NextInterval = getNextInterval(WeightedFamiliarity);
-            // console.log("weightsArray:"+weightsArray);
-            // console.log("NextInterval:"+NextInterval);
-            // setSnackbarMessage("下次背诵时间：" + NextInterval);
-            // setSnackbarOpen(true);
-            // const updatedWeightString = JSON.stringify(weightsArray);
-            // const token = localStorage.getItem('token');
-            // console.log("updateWord:"+updatedWords);
-            // console.log("wordId:"+updatedWords[0].wordId);
-            // console.log("weights:"+updatedWeightString);
-            // console.log("day:"+NextInterval);
-            // const userLogic = new UserLogic();
-            // userLogic.updateLinkedUserWord(token, updatedWords[0].wordId, updatedWeightString, NextInterval)
-
+            userLogic.updateLinkedUserWord(token, words[0].wordId, updatedWeightString, updatedDaysString, updatedNewDate);
+            setSnackbarMessage("下次背诵时间：" + updatedNewDate);
+            setSnackbarOpen(true);
             const updatedWords = words.filter((word, index) => index !== currentIndex);
             setWords(updatedWords);
             setCurrentIndex(0);

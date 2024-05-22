@@ -18,7 +18,7 @@ export async function getNextIntervalFromData(memoryHistory, prevIntervalDays) {
       break;
     }
   }
-  return intervalDays;
+  return intervalDays[intervalDays.length - 1];
 }
 
 async function getFamiliarityStatusFromData(session, memoryHistory, intervalDays) {
