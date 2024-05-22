@@ -7,9 +7,16 @@ if (typeof setImmediate === 'undefined') {
   };
 }
 
+ort.env.wasm.wasmPaths = {
+  'ort-wasm.wasm': '/wasm/ort-wasm.wasm',
+  'ort-wasm-simd.wasm': '/wasm/ort-wasm-simd.wasm',
+  'ort-wasm-threaded.wasm': '/wasm/ort-wasm-threaded.wasm',
+  'ort-wasm-simd-threaded.wasm': '/wasm/ort-wasm-simd-threaded.wasm',
+};
+
 // 加载ONNX模型
 export function loadModel() {
-  return ort.InferenceSession.create('src/logic/memory/lstm_model.onnx');
+  return ort.InferenceSession.create('/models/lstm_model.onnx');
 }
 
 // 进行推理
