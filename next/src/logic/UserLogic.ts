@@ -88,10 +88,11 @@ export class UserLogic {
   async linkUserNewWord(token: string, wordId: number): Promise<void> {
     try {
       const weights = '[]';
+      const days = '[]';
       const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 7);
-      const day = currentDate.toISOString().slice(0, 10);
-      await this.userService.linkUserWord(token, wordId, weights, day, day);
+      currentDate.setDate(currentDate.getDate() + 1);
+      const newDate = currentDate.toISOString().slice(0, 10);
+      await this.userService.linkUserWord(token, wordId, weights, days, newDate);
     } catch (error) {
       console.error("Error linking user word:", error);
       throw new Error("Failed to link user word.");
@@ -101,9 +102,10 @@ export class UserLogic {
   async linkUserHavedWord(token: string, wordName: string): Promise<void> {
     try {
       const weights = '[]';
+      const days = '[]';
       const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 7);
-      const day = currentDate.toISOString().slice(0, 10);
+      currentDate.setDate(currentDate.getDate() + 1);
+      const newDate = currentDate.toISOString().slice(0, 10);
       const word = await this.wordService.getWordByName(token, wordName);
       if (!word) {
         throw new Error(`Word '${wordName}' not found.`);
@@ -112,7 +114,7 @@ export class UserLogic {
       if (wordId === undefined) {
         throw new Error(`Word '${wordName}' has no ID.`);
       }
-      await this.userService.linkUserWord(token, wordId, weights, day, day);
+      await this.userService.linkUserWord(token, wordId, weights, days, newDate);
     } catch (error) {
       console.error("Error linking user word:", error);
       throw new Error("Failed to link user word.");
