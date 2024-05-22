@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS user_word
     user_id INT NOT NULL,
     word_id INT NOT NULL,
     weights TEXT,
-    day     DATE,
+    days    TEXT,
+    next_date DATE,
     PRIMARY KEY (user_id, word_id),
     FOREIGN KEY (user_id) REFERENCES user (id),
     FOREIGN KEY (word_id) REFERENCES word (id)

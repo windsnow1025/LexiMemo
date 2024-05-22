@@ -17,7 +17,9 @@ class UserWord(
 
     var weights: String,
 
-    var day: Date,
+    var days: String,
+
+    var nextDate: Date,
 
     @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
