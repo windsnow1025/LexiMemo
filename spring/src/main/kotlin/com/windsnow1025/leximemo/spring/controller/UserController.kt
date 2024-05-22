@@ -81,8 +81,6 @@ class UserController(val service: UserService,
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: MalformedJwtException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        } catch (e: DataIntegrityViolationException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build()
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
@@ -109,11 +107,15 @@ class UserController(val service: UserService,
     @PutMapping("/user/user-word")
     fun updateUserWord(@RequestHeader("Authorization") token: String, @RequestBody userWord: UserWord): ResponseEntity<Void> {
         try {
-            if (userWordService.updateUserWord(token, userWord)){
-                return ResponseEntity.ok().build()
+            return if (userWordService.updateUserWord(token, userWord)){
+                ResponseEntity.ok().build()
             } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+                ResponseEntity.status(HttpStatus.FORBIDDEN).build()
             }
+        } catch (e: SignatureException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        } catch (e: MalformedJwtException) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         } catch (e: Exception) {
             println(e)
             return ResponseEntity.internalServerError().build()
