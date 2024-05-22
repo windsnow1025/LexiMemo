@@ -75,9 +75,10 @@ export class UserLogic {
     return asciiRegex.test(input);
   }
 
-  async linkUserWord(token: string, wordId: number, weights: string, day: string): Promise<void> {
+
+  async linkUserWord(token: string, wordId: number, weights: string, days: string, nextDate:string): Promise<void> {
     try {
-      await this.userService.linkUserWord(token, wordId, weights, day);
+      await this.userService.linkUserWord(token, wordId, weights, days, nextDate);
     } catch (error) {
       console.error("Error linking user word:", error);
       throw new Error("Failed to link user word.");
@@ -90,7 +91,7 @@ export class UserLogic {
       const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 7);
       const day = currentDate.toISOString().slice(0, 10);
-      await this.userService.linkUserWord(token, wordId, weights, day);
+      await this.userService.linkUserWord(token, wordId, weights, day, day);
     } catch (error) {
       console.error("Error linking user word:", error);
       throw new Error("Failed to link user word.");
@@ -111,16 +112,16 @@ export class UserLogic {
       if (wordId === undefined) {
         throw new Error(`Word '${wordName}' has no ID.`);
       }
-      await this.userService.linkUserWord(token, wordId, weights, day);
+      await this.userService.linkUserWord(token, wordId, weights, day, day);
     } catch (error) {
       console.error("Error linking user word:", error);
       throw new Error("Failed to link user word.");
     }
   }
 
-  async updateLinkedUserWord(token: string, wordId: number, weights: string, day: string): Promise<void> {
+  async updateLinkedUserWord(token: string, wordId: number, weights: string, days: string, newDate:string): Promise<void> {
     try {
-      await this.userService.updateLinkedUserWord(token, wordId, weights, day);
+      await this.userService.updateLinkedUserWord(token, wordId, weights, days, newDate);
     } catch (error) {
       console.error("Error updating linked user word:", error);
       throw new Error("Failed to update linked user word.");
