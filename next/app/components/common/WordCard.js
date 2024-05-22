@@ -30,7 +30,7 @@ const WordCard = () => {
                 const userWords = await userLogic.getUserWord(token);
                 console.log("User words:", userWords);
                 // Sort words by day in ascending order
-                const sortedWords = userWords.sort((a, b) => new Date(a.word.day) - new Date(b.word.day));
+                const sortedWords = userWords.sort((a, b) => new Date(a.nextDate) - new Date(b.nextDate));
                 // Limit to first 5 words
                 const limitedWords = sortedWords.slice(0, 5).map(wordObj => {
                     // Initialize companion array for each word
