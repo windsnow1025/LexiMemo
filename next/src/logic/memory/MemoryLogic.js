@@ -14,7 +14,7 @@ export async function getNextIntervalFromData(memoryHistory, prevIntervalDays) {
   while (true) {
     intervalDays[intervalDays.length - 1] += 1;
     const familiarityStatus = await getFamiliarityStatusFromData(session, memoryHistory, intervalDays);
-    if (familiarityStatus === 1) {
+    if (familiarityStatus === 1 || familiarityStatus === 2) {
       break;
     }
   }
