@@ -1,56 +1,45 @@
-import { loadModel, predict } from './LSTM';
-import {getNextIntervalFromData} from "./MemoryLogic";
+import {loadModel, predict} from './LSTM';
+import {getNextIntervalFromData} from './MemoryLogic';
 
-test('ONNX model prediction', async () => {
-  // Mock Array.isArray to handle Float32Array and BigInt64Array
-  const originalImplementation = Array.isArray;
-  Array.isArray = jest.fn((type) => {
-    if (type.constructor.name === "Float32Array" || type.constructor.name === "BigInt64Array") {
-      return true;
-    }
-    return originalImplementation(type);
-  });
-
-  try {
-    const session = await loadModel();
-    // 记忆状态
-    const memoryHistory = [
-      [3, 2, 1],
-      [4, 1, 2],
-      [3, 1, 0]
-    ];
-    // 间隔日期
-    const intervalDays = [1, 2, 6];
-    const output = await predict(session, memoryHistory, intervalDays);
-    const outputArray = Array.from(output);
-    console.log('Prediction:', outputArray);
-    // 找到最大值的索引
-    const maxValue = Math.max(...outputArray);
-    const maxIndex = outputArray.findIndex(value => value === maxValue);
-    console.log('MaxIndex:', maxIndex);
-  } finally {
-    // Restore the original implementation after the test
-    Array.isArray = originalImplementation;
-  }
+jest.mock('onnxruntime-web', () => {
+  const originalModule = jest.requireActual('onnxruntime-web');
+  return {
+    ...originalModule,
+    InferenceSession: {
+      create: jest.fn().mockResolvedValue({
+        run: jest.fn().mockResolvedValue({
+          output: {data: new Float32Array([0.1, 0.9, 0.0])},
+        }),
+      }),
+    },
+  };
 });
 
-test('Memory Logic', async () => {
-  // Mock Array.isArray to handle Float32Array and BigInt64Array
-  const originalImplementation = Array.isArray;
-  Array.isArray = jest.fn((type) => {
-    if (type.constructor.name === "Float32Array" || type.constructor.name === "BigInt64Array") {
-      return true;
-    }
-    return originalImplementation(type);
-  });
-
+test('ONNX model prediction', async () => {
+  const session = await loadModel();
   const memoryHistory = [
     [3, 2, 1],
     [4, 1, 2],
-    [3, 1, 0]
+    [3, 1, 0],
   ];
-  // 间隔日期
+  const intervalDays = [1, 2, 6];
+  const output = await predict(session, memoryHistory, intervalDays);
+  const outputArray = Array.from(output);
+  console.log('Prediction:', outputArray);
+  const maxValue = Math.max(...outputArray);
+  const maxIndex = outputArray.findIndex((value) => value === maxValue);
+  console.log('MaxIndex:', maxIndex);
+  expect(maxIndex).toBe(1);
+});
+
+test('Memory Logic', async () => {
+  const memoryHistory = [
+    [3, 2, 1],
+    [4, 1, 2],
+    [3, 1, 0],
+  ];
   const prevIntervalDays = [1, 2];
   const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
   console.log('Next Interval:', nextInterval);
+  expect(nextInterval).toBeDefined();
 });

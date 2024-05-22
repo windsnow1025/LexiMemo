@@ -1,4 +1,4 @@
-import * as ort from 'onnxruntime-node';
+import * as ort from 'onnxruntime-web';
 
 // Polyfill for setImmediate
 if (typeof setImmediate === 'undefined') {
