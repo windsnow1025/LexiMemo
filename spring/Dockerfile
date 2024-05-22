@@ -12,4 +12,5 @@ ARG DEPENDENCY=/workspace/app/build/dependency
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+ENV SPRING_PROFILES_ACTIVE=docker
 ENTRYPOINT ["java","-cp","app:app/lib/*","com.windsnow1025.leximemo.spring.ApplicationKt"]
