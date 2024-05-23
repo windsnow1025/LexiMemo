@@ -1,15 +1,15 @@
-import * as ort from 'onnxruntime-web';
+import * as ort from 'onnxruntime-node';
 
-ort.env.wasm.wasmPaths = {
-  'ort-wasm.wasm': '/wasm/ort-wasm.wasm',
-  'ort-wasm-simd.wasm': '/wasm/ort-wasm-simd.wasm',
-  'ort-wasm-threaded.wasm': '/wasm/ort-wasm-threaded.wasm',
-  'ort-wasm-simd-threaded.wasm': '/wasm/ort-wasm-simd-threaded.wasm',
-};
+// Polyfill for setImmediate (if needed in your specific Node.js environment)
+if (typeof setImmediate === 'undefined') {
+  global.setImmediate = (callback, ...args) => {
+    return setTimeout(callback, 0, ...args);
+  };
+}
 
 // 加载ONNX模型
 export function loadModel() {
-  return ort.InferenceSession.create('/models/lstm_model.onnx');
+  return ort.InferenceSession.create('public/models/lstm_model.onnx');
 }
 
 // 进行推理

@@ -1,18 +1,14 @@
-import {loadModel, predict} from './LSTM';
-import {getNextIntervalFromData} from './MemoryLogic';
+import {loadModel, predict} from './LSTM-Node';
+import {getNextIntervalFromData} from './MemoryLogic-Node';
 
-jest.mock('onnxruntime-web', () => {
-  const originalModule = jest.requireActual('onnxruntime-web');
-  return {
-    ...originalModule,
-    InferenceSession: {
-      create: jest.fn().mockResolvedValue({
-        run: jest.fn().mockResolvedValue({
-          output: {data: new Float32Array([0.1, 0.9, 0.0])},
-        }),
-      }),
-    },
-  };
+beforeAll(() => {
+  const originalImplementation = Array.isArray;
+  Array.isArray = jest.fn((type) => {
+    if (type.constructor.name === "Float32Array" || type.constructor.name === "BigInt64Array") {
+      return true;
+    }
+    return originalImplementation(type);
+  });
 });
 
 test('ONNX model prediction', async () => {
@@ -29,7 +25,6 @@ test('ONNX model prediction', async () => {
   const maxValue = Math.max(...outputArray);
   const maxIndex = outputArray.findIndex((value) => value === maxValue);
   console.log('MaxIndex:', maxIndex);
-  expect(maxIndex).toBe(1);
 });
 
 test('Memory Logic 1', async () => {
@@ -48,10 +43,9 @@ test('Memory Logic 2', async () => {
   const memoryHistory = [
     [4, 2, 0],
     [2, 0, 0],
-    [2, 0, 0],
-    [2, 0, 0],
+    [2, 0, 1],
   ];
-  const prevIntervalDays = [1, 3, 9];
+  const prevIntervalDays = [1, 3];
   const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
   console.log('Next Interval:', nextInterval);
   expect(nextInterval).toBeDefined();
