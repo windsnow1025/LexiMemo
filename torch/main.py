@@ -28,11 +28,11 @@ y = torch.tensor(y, dtype=torch.long)
 X_padded = nn.utils.rnn.pad_sequence(X_combined, batch_first=True)
 lengths = torch.tensor([len(x) for x in X_combined])
 
-X_train, X_test, y_train, y_test, lengths_train, lengths_test = train_test_split(X_padded, y, lengths, test_size=0.2,
+X_train, X_test, y_train, y_test, lengths_train, lengths_test = train_test_split(X_padded, y, lengths, test_size=0.3,
                                                                                  random_state=42)
 
 input_size = X_train.shape[2]
-hidden_size = 50
+hidden_size = 16
 output_size = 3
 num_layers = 1
 
@@ -53,12 +53,21 @@ for epoch in range(num_epochs):
     if (epoch + 1) % 10 == 0:
         print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}')
 
-model.eval()
-with torch.no_grad():
-    outputs = model(X_test, lengths_test)
-    _, predicted = torch.max(outputs.data, 1)
-    accuracy = (predicted == y_test).sum().item() / y_test.size(0)
-    print(f'Accuracy: {accuracy * 100:.2f}%')
+
+def evaluate_model(model, X, y, lengths):
+    model.eval()
+    with torch.no_grad():
+        outputs = model(X, lengths)
+        _, predicted = torch.max(outputs.data, 1)
+        accuracy = (predicted == y).sum().item() / y.size(0)
+    return accuracy
+
+
+train_accuracy = evaluate_model(model, X_train, y_train, lengths_train)
+test_accuracy = evaluate_model(model, X_test, y_test, lengths_test)
+
+print(f'Train Accuracy: {train_accuracy * 100:.2f}%')
+print(f'Test Accuracy: {test_accuracy * 100:.2f}%')
 
 torch.save(model.state_dict(), 'model/lstm_model.pth')
 

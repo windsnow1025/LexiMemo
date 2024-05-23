@@ -53,7 +53,7 @@ test('Memory Logic 3', async () => {
   const memoryHistory = [
     [4, 2, 0],
     [2, 0, 0],
-    [2, 0, 0],
+    [2, 0, 1],
   ];
   const prevIntervalDays = [1, 3];
   const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
