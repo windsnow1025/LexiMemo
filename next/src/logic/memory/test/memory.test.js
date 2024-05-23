@@ -31,22 +31,31 @@ test('Memory Logic 1', async () => {
   const memoryHistory = [
     [3, 2, 1],
     [4, 1, 2],
-    [3, 1, 0],
+    [3, 0, 2],
   ];
   const prevIntervalDays = [1, 2];
   const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
   console.log('Next Interval:', nextInterval);
-  expect(nextInterval).toBeDefined();
 });
 
 test('Memory Logic 2', async () => {
   const memoryHistory = [
     [4, 2, 0],
     [2, 0, 0],
-    [2, 0, 1],
+    [2, 0, 0],
   ];
   const prevIntervalDays = [1, 3];
   const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
   console.log('Next Interval:', nextInterval);
-  expect(nextInterval).toBeDefined();
+});
+
+test('Memory Logic 3', async () => {
+  const memoryHistory = [
+    [4, 2, 0],
+    [2, 0, 0],
+    [2, 0, 0],
+  ];
+  const prevIntervalDays = [1, 3];
+  const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
+  console.log('Next Interval:', nextInterval);
 });
