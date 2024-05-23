@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 from data import *
 from lstm import LSTMModel
@@ -11,6 +12,9 @@ X = []
 y = []
 
 for i in range(len(data)):
+    # scaler = StandardScaler()
+    # data[i] = scaler.fit_transform(data[i])
+
     for j in range(1, len(data[i]) + 1):
         X.append(torch.tensor(data[i][:j], dtype=torch.float32))
         y.append(labels[i][j - 1])

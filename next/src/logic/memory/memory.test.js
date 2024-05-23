@@ -32,13 +32,26 @@ test('ONNX model prediction', async () => {
   expect(maxIndex).toBe(1);
 });
 
-test('Memory Logic', async () => {
+test('Memory Logic 1', async () => {
   const memoryHistory = [
     [3, 2, 1],
     [4, 1, 2],
     [3, 1, 0],
   ];
   const prevIntervalDays = [1, 2];
+  const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
+  console.log('Next Interval:', nextInterval);
+  expect(nextInterval).toBeDefined();
+});
+
+test('Memory Logic 2', async () => {
+  const memoryHistory = [
+    [4, 2, 0],
+    [2, 0, 0],
+    [2, 0, 0],
+    [2, 0, 0],
+  ];
+  const prevIntervalDays = [1, 3, 9];
   const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
   console.log('Next Interval:', nextInterval);
   expect(nextInterval).toBeDefined();
