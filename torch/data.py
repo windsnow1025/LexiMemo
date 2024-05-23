@@ -18,7 +18,7 @@ data.append(
     ]
 )
 interval_days.append([1, 3, 2, 6, 1, 3, 9])
-labels.append([[0, 1, 0, 2, 0, 0, 1]])
+labels.append([0, 1, 0, 2, 0, 0, 1])
 
 # 2，认识过程中一开始就出现了模糊和忘记，后又出现了一次忘记
 data.append(

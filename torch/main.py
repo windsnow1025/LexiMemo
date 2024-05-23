@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 
 from data import *
 from lstm import LSTMModel
@@ -12,26 +11,17 @@ X = []
 y = []
 
 for i in range(len(data)):
-    single_word_data = data[i]
-    single_word_intervals = interval_days[i]
-    single_word_labels = labels[i]
-
-    # 标准化数据
-    scaler = StandardScaler()
-    single_word_data = scaler.fit_transform(single_word_data)
-
-    for j in range(1, len(single_word_data) + 1):
-        X.append(torch.tensor(single_word_data[:j], dtype=torch.float32))
-        y.append(single_word_labels[j - 1])
+    for j in range(1, len(data[i]) + 1):
+        X.append(torch.tensor(data[i][:j], dtype=torch.float32))
+        y.append(labels[i][j - 1])
 
 # 将数据转换为张量
 X_combined = []
 index = 0
 for i in range(len(data)):
-    single_word_intervals = interval_days[i]
     for j in range(1, len(data[i]) + 1):
         X_combined.append(
-            torch.cat((X[index], torch.tensor(single_word_intervals[:j], dtype=torch.float32).view(-1, 1)), dim=1))
+            torch.cat((X[index], torch.tensor(interval_days[i][:j], dtype=torch.float32).view(-1, 1)), dim=1))
         index += 1
 
 y = torch.tensor(y, dtype=torch.long)
