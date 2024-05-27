@@ -73,6 +73,7 @@ No other contemporary poet’s work has such a well-earned reputation for near *
     this.defaultModel = "gpt-4o";
   }
 
+  // 只需 new ChatLogic(), 然后 await generateVocabsParagraph()
   async generateVocabsParagraph(text: string) {
     const messages = this.initMessages;
     messages[1].text = text;
