@@ -278,15 +278,15 @@ export default function PrimarySearchAppBar() {
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={toggleDrawer(true)}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
+                    {/*<IconButton*/}
+                    {/*    size="large"*/}
+                    {/*    edge="start"*/}
+                    {/*    color="inherit"*/}
+                    {/*    aria-label="open drawer"*/}
+                    {/*    onClick={toggleDrawer(true)}*/}
+                    {/*>*/}
+                    {/*    <MenuIcon/>*/}
+                    {/*</IconButton>*/}
                     <Typography
                         variant="h6"
                         noWrap
@@ -342,23 +342,23 @@ export default function PrimarySearchAppBar() {
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Drawer
-                anchor="left"
-                open={isDrawerOpen}
-                onClose={toggleDrawer(false)}
-            >
-                <List>
-                    <ListItem button key={'主页'} onClick={() => handleNavigation('/')}>
-                        <ListItemText primary={'主页'}/>
-                    </ListItem>
-                    <ListItem button key={'用户单词管理'} onClick={() => handleNavigation('/user/modify-your-words')}>
-                        <ListItemText primary={'单词管理'}/>
-                    </ListItem>
-                    <ListItem button key={'数据分析'} onClick={() => handleNavigation('/user/data-analysis')}>
-                        <ListItemText primary={'数据分析'}/>
-                    </ListItem>
-                </List>
-            </Drawer>
+            {/*<Drawer*/}
+            {/*    anchor="left"*/}
+            {/*    open={isDrawerOpen}*/}
+            {/*    onClose={toggleDrawer(false)}*/}
+            {/*>*/}
+            {/*    <List>*/}
+            {/*        <ListItem button key={'主页'} onClick={() => handleNavigation('/')}>*/}
+            {/*            <ListItemText primary={'主页'}/>*/}
+            {/*        </ListItem>*/}
+            {/*        <ListItem button key={'用户单词管理'} onClick={() => handleNavigation('/user/modify-your-words')}>*/}
+            {/*            <ListItemText primary={'单词管理'}/>*/}
+            {/*        </ListItem>*/}
+            {/*        <ListItem button key={'数据分析'} onClick={() => handleNavigation('/user/data-analysis')}>*/}
+            {/*            <ListItemText primary={'数据分析'}/>*/}
+            {/*        </ListItem>*/}
+            {/*    </List>*/}
+            {/*</Drawer>*/}
             {renderMobileMenu}
             {renderMenu}
             {/* Login Dialog */}
