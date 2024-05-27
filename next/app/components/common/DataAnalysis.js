@@ -1,13 +1,15 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import CardContent from "@mui/material/CardContent";
 import Card from "@mui/material/Card";
 import { UserLogic } from '../../../src/logic/UserLogic';
+import { ChatLogic } from '../../../src/logic/ChatLogic';
 
 export default function BasicLineChart() {
     const [data, setData] = React.useState([]);
+    const [initialMessage, setInitialMessage] = useState('');
 
-    React.useEffect(() => {
+    useEffect(() => {
         async function fetchData() {
             try {
                 const userLogic = new UserLogic();
@@ -33,6 +35,17 @@ export default function BasicLineChart() {
             }
         }
 
+        const fetchInitialMessage = async () => {
+            const chatLogic = new ChatLogic();
+            try {
+                const message = await chatLogic.generateVocabsParagraph("");
+                setInitialMessage(message);
+            } catch (error) {
+                console.error("Error fetching initial message:", error);
+            }
+        };
+
+        fetchInitialMessage();
         fetchData();
     }, []);
 
@@ -49,6 +62,9 @@ export default function BasicLineChart() {
                     width={500}
                     height={300}
                 />
+            </CardContent>
+            <CardContent>
+                <pre>{initialMessage}</pre>
             </CardContent>
         </Card>
     );
