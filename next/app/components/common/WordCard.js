@@ -94,7 +94,7 @@ const WordCard = () => {
             const { zeros, ones, negatives } = countZerosOnesAndNegatives(companionArray);
             const weightString = words[0].weights;
             const weightArray = JSON.parse(weightString);
-            weightArray.push([zeros, negatives, ones]);
+            weightArray.push([ones, negatives, zeros]);
             const prevIntervalDays = words[0].days;
             const oldDate = words[0].nextDate;
             const prevIntervalDaysArray = JSON.parse(prevIntervalDays);
