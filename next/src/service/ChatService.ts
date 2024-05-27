@@ -21,7 +21,8 @@ export default class ChatService {
       temperature: number,
       stream: boolean
   ): Promise<string | StreamResponse> {
-    const token = localStorage.getItem('token')!;
+    // const token = localStorage.getItem('token')!;
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNCIsInVzZXJuYW1lIjoidGVzdCIsInJvbGVzIjpbInVzZXIiXSwiaWF0IjoxNzE2NzgxMTA1LCJleHAiOjE3MTkzNzMxMDV9.ywYhLtzdn4CRQ5Ghq8BKMZyZ2f_HLuKbv6WbIcHu5o8"
 
     const requestData = {
       messages: messages,
