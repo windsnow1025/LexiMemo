@@ -104,7 +104,8 @@ No other contemporary poet’s work has such a well-earned reputation for near *
 
     try {
       const content = await this.chatService.generate(unsanitizedMessages, api_type, model, temperature, stream) as string;
-      return this.sanitize(content);
+      // return this.sanitize(content);
+      return content;
     } catch (err) {
       console.error("Error in POST /:", err);
       throw err;

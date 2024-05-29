@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import CardContent from "@mui/material/CardContent";
 import Card from "@mui/material/Card";
@@ -9,17 +9,23 @@ import { ChatLogic } from '../../../src/logic/ChatLogic';
 
 export default function BasicLineChart() {
     const [data, setData] = useState([]);
-    const [initialMessage, setInitialMessage] = useState(`
-    <br>
-    <br>
-    <br>
-    <br>
-    <h3>数据生成中...</h3>
-    <br>
-    <br>
-    <br>
-    <br>
+    const [responseMessage, setResponseMessage] = useState(`
+<br>
+<br>
+<br>
+<br>
+<h3>数据生成中...</h3>
+<br>
+<br>
+<br>
+<br>
     `);
+
+    const markdownRef = useRef(null);
+
+    useEffect(() => {
+        markdownRef.current.innerHTML = responseMessage;
+    }, [responseMessage]);
 
     useEffect(() => {
         async function fetchData() {
@@ -50,9 +56,9 @@ export default function BasicLineChart() {
         const fetchInitialMessage = async () => {
             const chatLogic = new ChatLogic();
             try {
-                const message = await chatLogic.generateVocabsParagraph("");
+                const message = await chatLogic.generateVocabsParagraph();
                 console.log(message);
-                setInitialMessage(message);
+                setResponseMessage(message);
             } catch (error) {
                 console.error("Error fetching initial message:", error);
             }
@@ -81,8 +87,11 @@ export default function BasicLineChart() {
                     </CardContent>
                 </Box>
                 <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'white', borderRadius: 2, boxShadow: 1, height: 300, overflowY: 'auto' }}>
-                    <CardContent sx={{ flex: 1 }}>
-                        <div dangerouslySetInnerHTML={{ __html: initialMessage }} />
+                    <CardContent sx={{flex: 1}}>
+                        <div
+                          className="markdown-body"
+                          ref={markdownRef}
+                        />
                     </CardContent>
                 </Box>
             </Box>
