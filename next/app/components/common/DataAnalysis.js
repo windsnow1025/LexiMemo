@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import { UserLogic } from '../../../src/logic/UserLogic';
 import { ChatLogic } from '../../../src/logic/ChatLogic';
 import Typography from "@mui/material/Typography";
+import {parseMarkdown} from "../../../src/util/MarkdownParser";
 
 export default function BasicLineChart() {
     const [data, setData] = useState([]);
@@ -24,12 +25,16 @@ export default function BasicLineChart() {
 
     const markdownRef = useRef(null);
 
-    useEffect(() => {
-        markdownRef.current.innerHTML = responseMessage;
+    async function updateMessage() {
+        markdownRef.current.innerHTML = await parseMarkdown(responseMessage, false);
+    }
+
+    useEffect( () => {
+        updateMessage();
     }, [responseMessage]);
 
     useEffect(() => {
-        async function fetchData() {
+        async function fetchChartData() {
             try {
                 const userLogic = new UserLogic();
                 const token = localStorage.getItem('token');
@@ -60,7 +65,7 @@ export default function BasicLineChart() {
             }
         }
 
-        const fetchInitialMessage = async () => {
+        const generateParagraph = async () => {
             const chatLogic = new ChatLogic();
             try {
                 const message = await chatLogic.generateVocabsParagraph();
@@ -71,15 +76,15 @@ export default function BasicLineChart() {
             }
         };
 
-        fetchInitialMessage();
-        fetchData();
+        generateParagraph();
+        fetchChartData();
     }, []);
 
     return (
-        <Card sx={{ maxWidth: 1000, p: 2, bgcolor: '#f9f9f9', boxShadow: 3, borderRadius: 2 }}>
+        <Card sx={{ maxWidth: 1000, p: 2, boxShadow: 3, borderRadius: 2 }}>
             <CardHeader title="单词数据分析" sx={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }} />
             <Box sx={{ display: 'flex', gap: 2 }}>
-                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'white', borderRadius: 2, boxShadow: 1, height: 330 }}>
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', borderRadius: 2, boxShadow: 1, height: 500 }}>
                     <CardContent sx={{ flex: 1 }}>
                         <Typography variant="h6" color="textSecondary" sx={{ marginTop: 2, textAlign: 'center' }}>
                             遗忘曲线
@@ -97,13 +102,11 @@ export default function BasicLineChart() {
 
                     </CardContent>
                 </Box>
-                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'white', borderRadius: 2, boxShadow: 1, height: 330, overflowY: 'auto' }}>
-                    <CardContent sx={{flex: 1}}>
-                        <div
-                          className="markdown-body"
-                          ref={markdownRef}
-                        />
-                    </CardContent>
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', borderRadius: 2, boxShadow: 1, overflowY: 'auto' }}>
+                    <div
+                      className="markdown-body p-2 min-h-16"
+                      ref={markdownRef}
+                    />
                 </Box>
             </Box>
         </Card>

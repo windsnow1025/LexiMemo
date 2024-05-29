@@ -36,6 +36,7 @@ test('Memory Logic 1', async () => {
   const prevIntervalDays = [1, 2];
   const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
   console.log('Next Interval:', nextInterval);
+  // < 2
 });
 
 test('Memory Logic 2', async () => {
@@ -47,6 +48,7 @@ test('Memory Logic 2', async () => {
   const prevIntervalDays = [1, 3];
   const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
   console.log('Next Interval:', nextInterval);
+  // > 5
 });
 
 test('Memory Logic 3', async () => {
@@ -58,6 +60,7 @@ test('Memory Logic 3', async () => {
   const prevIntervalDays = [1, 3];
   const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
   console.log('Next Interval:', nextInterval);
+  // < 2
 });
 
 test('Memory Logic 4', async () => {
@@ -67,4 +70,15 @@ test('Memory Logic 4', async () => {
   const prevIntervalDays = [];
   const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
   console.log('Next Interval:', nextInterval);
+  // > 2
+});
+
+test('Memory Logic 5', async () => {
+  const memoryHistory = [
+    [3, 0, 1],
+  ];
+  const prevIntervalDays = [];
+  const nextInterval = await getNextIntervalFromData(memoryHistory, prevIntervalDays);
+  console.log('Next Interval:', nextInterval);
+  // < 2
 });
