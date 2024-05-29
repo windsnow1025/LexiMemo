@@ -34,20 +34,26 @@ export default function BasicLineChart() {
                 const userLogic = new UserLogic();
                 const token = localStorage.getItem('token');
                 const userWords = await userLogic.getUserWord(token);
+
                 let daysArray = [];
+                let daysNum = [];
 
                 userWords.forEach(word => {
                     const days = JSON.parse(word.days);
-                    if (daysArray.length === 0) {
-                        daysArray = days;
-                    } else {
-                        days.forEach((day, index) => {
-                            daysArray[index] = (daysArray[index] || 0) + day;
-                        });
-                    }
+                    days.forEach((day, index) => {
+                        if (daysArray[index] === undefined) {
+                            daysArray[index] = day;
+                            daysNum[index] = 1;
+                        } else {
+                            daysArray[index] += day;
+                            daysNum[index] += 1;
+                        }
+                    });
                 });
 
-                const invertedData = daysArray.map(day => 1 / day);
+                const averagedData = daysArray.map((day, index) => day / daysNum[index]);
+                const invertedData = averagedData.map(day => 1 / day);
+
                 setData(invertedData);
             } catch (error) {
                 console.error("Error fetching user words:", error);
@@ -76,7 +82,7 @@ export default function BasicLineChart() {
                 <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'white', borderRadius: 2, boxShadow: 1, height: 330 }}>
                     <CardContent sx={{ flex: 1 }}>
                         <Typography variant="h6" color="textSecondary" sx={{ marginTop: 2, textAlign: 'center' }}>
-                            记忆曲线
+                            遗忘曲线
                         </Typography>
                         <LineChart
                             xAxis={[{ data: data.map((_, index) => index + 1) }]}
