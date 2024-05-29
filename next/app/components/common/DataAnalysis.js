@@ -2,13 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import CardContent from "@mui/material/CardContent";
 import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
 import Box from "@mui/material/Box";
 import { UserLogic } from '../../../src/logic/UserLogic';
 import { ChatLogic } from '../../../src/logic/ChatLogic';
 
 export default function BasicLineChart() {
-    const [data, setData] = React.useState([]);
-    const [initialMessage, setInitialMessage] = useState('');
+    const [data, setData] = useState([]);
+    const [initialMessage, setInitialMessage] = useState(`
+    <br>
+    <br>
+    <br>
+    <br>
+    <h3>数据生成中...</h3>
+    <br>
+    <br>
+    <br>
+    <br>
+    `);
 
     useEffect(() => {
         async function fetchData() {
@@ -52,23 +63,28 @@ export default function BasicLineChart() {
     }, []);
 
     return (
-        <Card sx={{ maxWidth: 1000 }}>
-            <Box sx={{ display: 'flex' }}>
-                <CardContent sx={{ flex: 1, border: '1px solid grey', height: '300px', overflow: 'auto' }}>
-                    <LineChart
-                        xAxis={[{ data: data.map((_, index) => index + 1) }]}
-                        series={[
-                            {
-                                data: data,
-                            },
-                        ]}
-                        width={500}
-                        height={250}
-                    />
-                </CardContent>
-                <CardContent sx={{ flex: 1, border: '1px solid grey', height: '300px', overflow: 'auto' }}>
-                    <pre>{initialMessage}</pre>
-                </CardContent>
+        <Card sx={{ maxWidth: 1000, p: 2, bgcolor: '#f9f9f9', boxShadow: 3, borderRadius: 2 }}>
+            <CardHeader title="单词数据分析" sx={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }} />
+            <Box sx={{ display: 'flex', gap: 2 }}>
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'white', borderRadius: 2, boxShadow: 1, height: 300 }}>
+                    <CardContent sx={{ flex: 1 }}>
+                        <LineChart
+                            xAxis={[{ data: data.map((_, index) => index + 1) }]}
+                            series={[
+                                {
+                                    data: data,
+                                },
+                            ]}
+                            width={500}
+                            height={250}
+                        />
+                    </CardContent>
+                </Box>
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'white', borderRadius: 2, boxShadow: 1, height: 300, overflowY: 'auto' }}>
+                    <CardContent sx={{ flex: 1 }}>
+                        <div dangerouslySetInnerHTML={{ __html: initialMessage }} />
+                    </CardContent>
+                </Box>
             </Box>
         </Card>
     );
