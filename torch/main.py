@@ -28,11 +28,15 @@ y = torch.tensor(y, dtype=torch.long)
 X_padded = nn.utils.rnn.pad_sequence(X_combined, batch_first=True)
 lengths = torch.tensor([len(x) for x in X_combined])
 
-X_train, X_test, y_train, y_test, lengths_train, lengths_test = train_test_split(X_padded, y, lengths, test_size=0.3,
-                                                                                 random_state=42)
+# X_train, X_test, y_train, y_test, lengths_train, lengths_test = train_test_split(X_padded, y, lengths, test_size=0.2,
+                                                                                 # random_state=42)
+
+X_train = X_padded
+y_train = y
+lengths_train = lengths
 
 input_size = X_train.shape[2]
-hidden_size = 16
+hidden_size = 12
 output_size = 3
 num_layers = 1
 
@@ -41,7 +45,7 @@ model = LSTMModel(input_size, hidden_size, output_size, num_layers)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-num_epochs = 50
+num_epochs = 100
 for epoch in range(num_epochs):
     model.train()
     optimizer.zero_grad()
@@ -64,10 +68,10 @@ def evaluate_model(model, X, y, lengths):
 
 
 train_accuracy = evaluate_model(model, X_train, y_train, lengths_train)
-test_accuracy = evaluate_model(model, X_test, y_test, lengths_test)
+# test_accuracy = evaluate_model(model, X_test, y_test, lengths_test)
 
 print(f'Train Accuracy: {train_accuracy * 100:.2f}%')
-print(f'Test Accuracy: {test_accuracy * 100:.2f}%')
+# print(f'Test Accuracy: {test_accuracy * 100:.2f}%')
 
 torch.save(model.state_dict(), 'model/lstm_model.pth')
 

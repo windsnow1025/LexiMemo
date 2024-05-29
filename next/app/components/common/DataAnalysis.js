@@ -78,7 +78,7 @@ export default function BasicLineChart() {
         <Card sx={{ maxWidth: 1000, p: 2, boxShadow: 3, borderRadius: 2 }}>
             <CardHeader title="单词数据分析" sx={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }} />
             <Box sx={{ display: 'flex', gap: 2 }}>
-                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', borderRadius: 2, boxShadow: 1, height: 330 }}>
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', borderRadius: 2, boxShadow: 1, height: 500 }}>
                     <CardContent sx={{ flex: 1 }}>
                         <Typography variant="h6" color="textSecondary" sx={{ marginTop: 2, textAlign: 'center' }}>
                             记忆曲线
@@ -96,7 +96,7 @@ export default function BasicLineChart() {
 
                     </CardContent>
                 </Box>
-                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', borderRadius: 2, boxShadow: 1, height: 330, overflowY: 'auto' }}>
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', borderRadius: 2, boxShadow: 1, overflowY: 'auto' }}>
                     <div
                       className="markdown-body p-2 min-h-16"
                       ref={markdownRef}
