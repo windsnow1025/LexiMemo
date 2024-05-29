@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import { UserLogic } from '../../../src/logic/UserLogic';
 import { ChatLogic } from '../../../src/logic/ChatLogic';
 import Typography from "@mui/material/Typography";
+import {parseMarkdown} from "../../../src/util/MarkdownParser";
 
 export default function BasicLineChart() {
     const [data, setData] = useState([]);
@@ -24,8 +25,12 @@ export default function BasicLineChart() {
 
     const markdownRef = useRef(null);
 
-    useEffect(() => {
-        markdownRef.current.innerHTML = responseMessage;
+    async function updateMessage() {
+        markdownRef.current.innerHTML = await parseMarkdown(responseMessage, false);
+    }
+
+    useEffect( () => {
+        updateMessage();
     }, [responseMessage]);
 
     useEffect(() => {
