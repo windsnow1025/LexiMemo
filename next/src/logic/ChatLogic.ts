@@ -1,6 +1,5 @@
 import ChatService, {StreamResponse} from "../service/ChatService";
 import {Message} from "../model/Message"
-import {ApiTypeModel} from "@/src/model/Chat";
 import {UserLogic} from "@/src/logic/UserLogic";
 import {parseMarkdown} from "@/src/util/MarkdownParser";
 
@@ -77,24 +76,24 @@ No other contemporary poet’s work has such a well-earned reputation for near *
 
   // 只需 new ChatLogic(), 然后 await generateVocabsParagraph()
 
+  async generateVocabsParagraph() {
+    const text = await this.getUserWord();
+    const messages = this.initMessages;
+    messages[1].text = text;
+    const paragraph =  await this.nonStreamGenerate(messages, this.defaultApiType, this.defaultModel, 0, false);
+    return parseMarkdown(paragraph);
+  }
+
   async getUserWord() {
     const userLogic = new UserLogic();
     const token = localStorage.getItem('token')!;
     try {
       const userWords = await userLogic.getUserWord(token);
-      const wordList = userWords.map((wordObj: { word: { word: any; }; }) => wordObj.word.word).join(', ');
-      return parseMarkdown(wordList);
+      return userWords.map((wordObj: { word: { word: any; }; }) => wordObj.word.word).join(', ');
     } catch (error) {
       console.error("Error fetching user words:", error);
       return '';
     }
-  }
-
-  async generateVocabsParagraph() {
-    const text = await this.getUserWord();
-    const messages = this.initMessages;
-    messages[1].text = text;
-    return await this.nonStreamGenerate(messages, this.defaultApiType, this.defaultModel, 0, false);
   }
 
   async nonStreamGenerate(messages: Message[], api_type: string, model: string, temperature: number, stream: boolean) {
