@@ -6,6 +6,7 @@ import CardHeader from "@mui/material/CardHeader";
 import Box from "@mui/material/Box";
 import { UserLogic } from '../../../src/logic/UserLogic';
 import { ChatLogic } from '../../../src/logic/ChatLogic';
+import Typography from "@mui/material/Typography";
 
 export default function BasicLineChart() {
     const [data, setData] = useState([]);
@@ -72,8 +73,11 @@ export default function BasicLineChart() {
         <Card sx={{ maxWidth: 1000, p: 2, bgcolor: '#f9f9f9', boxShadow: 3, borderRadius: 2 }}>
             <CardHeader title="单词数据分析" sx={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }} />
             <Box sx={{ display: 'flex', gap: 2 }}>
-                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'white', borderRadius: 2, boxShadow: 1, height: 300 }}>
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'white', borderRadius: 2, boxShadow: 1, height: 330 }}>
                     <CardContent sx={{ flex: 1 }}>
+                        <Typography variant="h6" color="textSecondary" sx={{ marginTop: 2, textAlign: 'center' }}>
+                            记忆曲线
+                        </Typography>
                         <LineChart
                             xAxis={[{ data: data.map((_, index) => index + 1) }]}
                             series={[
@@ -84,9 +88,10 @@ export default function BasicLineChart() {
                             width={500}
                             height={250}
                         />
+
                     </CardContent>
                 </Box>
-                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'white', borderRadius: 2, boxShadow: 1, height: 300, overflowY: 'auto' }}>
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'white', borderRadius: 2, boxShadow: 1, height: 330, overflowY: 'auto' }}>
                     <CardContent sx={{flex: 1}}>
                         <div
                           className="markdown-body"
