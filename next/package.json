@@ -29,6 +29,7 @@
     "requests": "^0.3.0"
   },
   "devDependencies": {
+    "@types/katex": "^0.16.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
