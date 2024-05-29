@@ -3,6 +3,13 @@ import {Message} from "../model/Message"
 import {UserLogic} from "@/src/logic/UserLogic";
 import {parseMarkdown} from "@/src/util/MarkdownParser";
 
+interface Word {
+  word: {
+    word: string;
+  };
+  nextDate: string;
+}
+
 export class ChatLogic {
   private chatService: ChatService;
   public initMessages: Message[];
@@ -84,12 +91,19 @@ No other contemporary poet’s work has such a well-earned reputation for near *
     return parseMarkdown(paragraph);
   }
 
-  async getUserWord() {
+
+  async getUserWord(): Promise<string> {
     const userLogic = new UserLogic();
-    const token = localStorage.getItem('token')!;
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token not found');
+    }
+
     try {
-      const userWords = await userLogic.getUserWord(token);
-      return userWords.map((wordObj: { word: { word: any; }; }) => wordObj.word.word).join(', ');
+      const userWords: Word[] = await userLogic.getUserWord(token);
+      const sortedWords = userWords.sort((a, b) => new Date(a.nextDate).getTime() - new Date(b.nextDate).getTime());
+      const limitedWords = sortedWords.slice(0, 10);
+      return limitedWords.map((wordObj) => wordObj.word.word).join(', ');
     } catch (error) {
       console.error("Error fetching user words:", error);
       return '';

@@ -28,17 +28,17 @@ function Index(props) {
             <NavBar/>
             <Box sx={{ flexGrow: 1, margin: 5}}>
                 <Grid container spacing={2}>
-                    <Grid item xs={8}>
-                        <Item>xs=8</Item>
+                    <Grid item xs={6}>
+                        <Item>管理员admin欢迎回来！</Item>
                     </Grid>
-                    <Grid item xs={4}>
-                        <Item>xs=4</Item>
+                    <Grid item xs={6}>
+                        <Item>用户数量：4个</Item>
                     </Grid>
-                    <Grid item xs={4}>
-                        <Item>xs=4</Item>
+                    <Grid item xs={6}>
+                        <Item>单词数量：19个</Item>
                     </Grid>
-                    <Grid item xs={8}>
-                        <Item>xs=8</Item>
+                    <Grid item xs={6}>
+                        <Item>词书数量：3本</Item>
                     </Grid>
                 </Grid>
             </Box>

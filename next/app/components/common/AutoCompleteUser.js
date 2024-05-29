@@ -12,16 +12,16 @@ export default function AutocompleteAdmin() {
 
     const handleSelection = (event, newValue) => {
         if (newValue && newValue.title) {
-            let path = '/user/';
+            let path = '/';
             switch (newValue.title) {
                 case '主页':
                     path += '';
                     break;
                 case '单词管理':
-                    path += 'modify-your-words';
+                    path += 'user/modify-your-words';
                     break;
                 case '数据分析':
-                    path += 'data-analysis';
+                    path += 'user/data-analysis';
                     break;
                 default:
                     break;

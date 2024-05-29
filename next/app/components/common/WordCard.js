@@ -30,7 +30,7 @@ const WordCard = () => {
                 const userWords = await userLogic.getUserWord(token);
                 console.log("User words:", userWords);
                 const sortedWords = userWords.sort((a, b) => new Date(a.nextDate) - new Date(b.nextDate));
-                const limitedWords = sortedWords.slice(0, 5).map(wordObj => {
+                const limitedWords = sortedWords.slice(0, 10).map(wordObj => {
                     return { ...wordObj, companionArray: [], stats: { known: 0, blurred: 0, notKnown: 0 } };
                 });
                 console.log("Limited words:", limitedWords);
@@ -143,69 +143,78 @@ const WordCard = () => {
     };
 
     return (
-      <>
-          <Card sx={{ maxWidth: 500 }}>
-              <CardContent>
-                  <Box sx={{ textAlign: 'center' }}>
-                      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                          Word of the Day
-                      </Typography>
-                      {finished ? (
-                        <Typography variant="h5" component="div">
-                            今日单词已背完，恭喜你！
+        <>
+            <Card sx={{ maxWidth: 500 }}>
+                <CardContent>
+                    <Box sx={{ textAlign: 'center' }}>
+                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                            Word of the Day
                         </Typography>
-                      ) : (
-                        <>
+                        {finished ? (
                             <Typography variant="h5" component="div">
-                                {words[0]?.word?.word}
+                                今日单词已背完，恭喜你！
                             </Typography>
-                            {showTranslation && (
-                              <Typography variant="body1" component="div">
-                                  翻译: {words[0]?.word?.translation}
-                              </Typography>
-                            )}
-                            {showExampleSentence && (
-                              <Typography variant="body1" component="div">
-                                  例句: {words[0]?.word?.exampleSentence}
-                              </Typography>
-                            )}
-                            <Typography variant="body2" component="div">
-                                记住: {words[0]?.stats?.known} 次 | 模糊: {words[0]?.stats?.blurred} 次 | 忘记: {words[0]?.stats?.notKnown} 次
-                            </Typography>
+                        ) : (
+                            <>
+                                <Typography variant="h5" component="div">
+                                    {words[0]?.word?.word}
+                                </Typography>
+                                {showTranslation && (
+                                    <Typography variant="body1" component="div">
+                                        翻译: {words[0]?.word?.translation}
+                                    </Typography>
+                                )}
+                                {showExampleSentence && (
+                                    <Typography variant="body1" component="div">
+                                        例句: {words[0]?.word?.exampleSentence}
+                                    </Typography>
+                                )}
+                                <br/>
+                                <Typography
+                                    variant="body2"
+                                    component="div"
+                                    sx={{
+                                        backgroundColor: 'rgba(255, 192, 203, 0.3)',
+                                        borderRadius: 3,
+                                        padding: 1
+                                    }}
+                                >
+                                    记住: {words[0]?.stats?.known} 次 | 模糊: {words[0]?.stats?.blurred} 次 | 忘记: {words[0]?.stats?.notKnown} 次
+                                </Typography>
+                            </>
+                        )}
+                    </Box>
+                </CardContent>
+                <CardActions sx={{ justifyContent: 'center' }}>
+                    {!finished && !showNextButton && (
+                        <>
+                            <Button size="small" variant="contained" onClick={handleKnow}>
+                                认识
+                            </Button>
+                            <Button size="small" onClick={handleBlur}>
+                                模糊
+                            </Button>
+                            <Button size="small" variant="contained" onClick={handleNotKnow}>
+                                不认识
+                            </Button>
                         </>
-                      )}
-                  </Box>
-              </CardContent>
-              <CardActions sx={{ justifyContent: 'center' }}>
-                  {!finished && !showNextButton && (
-                    <>
-                        <Button size="small" variant="contained" onClick={handleKnow}>
-                            认识
+                    )}
+                    {showNextButton && (
+                        <Button size="small" variant="contained" onClick={handleNextWord}>
+                            下一个
                         </Button>
-                        <Button size="small" onClick={handleBlur}>
-                            模糊
-                        </Button>
-                        <Button size="small" variant="contained" onClick={handleNotKnow}>
-                            不认识
-                        </Button>
-                    </>
-                  )}
-                  {showNextButton && (
-                    <Button size="small" variant="contained" onClick={handleNextWord}>
-                        下一个
-                    </Button>
-                  )}
-              </CardActions>
-              <Button size="small" onClick={() => handlePlayAudio(words[0]?.word?.word)} sx={{ justifyContent: 'center' }}>
-                  <PlayArrowIcon />
-              </Button>
-          </Card>
-          <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-              <MuiAlert onClose={handleCloseSnackbar} severity="info" sx={{ width: '100%' }}>
-                  {snackbarMessage}
-              </MuiAlert>
-          </Snackbar>
-      </>
+                    )}
+                </CardActions>
+                <Button size="small" onClick={() => handlePlayAudio(words[0]?.word?.word)} sx={{ justifyContent: 'center' }}>
+                    <PlayArrowIcon />
+                </Button>
+            </Card>
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <MuiAlert onClose={handleCloseSnackbar} severity="info" sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </MuiAlert>
+            </Snackbar>
+        </>
     );
 };
 
